@@ -1,5 +1,6 @@
 package com.openclassrooms.safetynetalerts.service;
 
+import com.openclassrooms.safetynetalerts.exceptions.PersonNotFoundException;
 import com.openclassrooms.safetynetalerts.model.Person;
 import com.openclassrooms.safetynetalerts.repository.PersonRepository;
 import org.slf4j.Logger;
@@ -21,13 +22,22 @@ public class PersonService {
         return personRepository.getAllPerson();
     }
 
-    public Person savePerson(Person p) throws Exception {
-        if (validatePersonInfo(p)) {
-            return personRepository.savePerson(p);
-        } else {
-            throw new Exception("Person's information invalid ! Must have unique first & last name.");
-        }
+    public Person savePerson(Person p){
+        return personRepository.savePerson(p);
     }
+
+    public Person updatePerson(Person p) throws PersonNotFoundException {
+        return personRepository.updatePerson(p);
+    }
+
+    public Person deletePerson(Person p) throws PersonNotFoundException {
+        return personRepository.deletePerson(p);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////                      PRIVATE METHODS                  ///////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
     private boolean validatePersonInfo(Person p) {
         List<Person> people = personRepository.getAllPerson();
