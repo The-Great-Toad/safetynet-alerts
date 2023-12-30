@@ -20,18 +20,31 @@ public class PersonRepository {
 
     @Autowired
     private ObjectMapper objectMapper;
+    private static List<Person> people = new ArrayList<>();
 
     public List<Person> getAllPerson() {
 
-        List<Person> people = new ArrayList<>();
-
-        try {
-            String filePath = "src/main/resources/person.json";
-            people = objectMapper.readValue(new File(filePath), new TypeReference<>() {});
-        } catch (IOException e) {
-            logger.error("[ERROR - PERSON.JSON] WHILE MAPPING DATA : {} ", e.getMessage());
+        if (people.isEmpty()) {
+            try {
+                String filePath = "src/main/resources/person.json";
+                people = objectMapper.readValue(new File(filePath), new TypeReference<>() {});
+            } catch (IOException e) {
+                logger.error("[ERROR - PERSON.JSON] WHILE MAPPING DATA : {} ", e.getMessage());
+            }
         }
         return people;
+    }
+
+    public Person savePerson(Person p) {
+
+        if (people.isEmpty()) {
+            getAllPerson();
+        }
+
+        System.out.printf("[INFO] Saving person: %s %n", p.toString());
+        people.add(p);
+
+        return p;
     }
 
 }
