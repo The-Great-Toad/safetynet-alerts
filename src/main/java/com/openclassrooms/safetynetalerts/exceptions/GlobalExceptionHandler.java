@@ -1,6 +1,7 @@
-package com.openclassrooms.safetynetalerts.validators;
+package com.openclassrooms.safetynetalerts.exceptions;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -13,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestControllerAdvice
-public class ValidationHandler {
+public class GlobalExceptionHandler {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST) // set the HTTP status code.
     @ExceptionHandler(MethodArgumentNotValidException.class) // Handle all provided exception type.
@@ -28,5 +29,10 @@ public class ValidationHandler {
             errors.put(fe.getField(), fe.getDefaultMessage());
         });
         return errors;
+    }
+
+    @ExceptionHandler(PersonNotFoundException.class)
+    public ResponseEntity handlePersonNotFoundException(PersonNotFoundException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.OK);
     }
 }

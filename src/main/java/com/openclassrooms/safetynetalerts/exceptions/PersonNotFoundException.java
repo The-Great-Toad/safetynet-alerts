@@ -1,22 +1,19 @@
 package com.openclassrooms.safetynetalerts.exceptions;
 
-import lombok.Data;
+public class PersonNotFoundException extends RuntimeException {
 
-@Data
-public class PersonNotFoundException extends Throwable {
-
-
-    private final String type;
-    private final String message;
-
-    public PersonNotFoundException(String type, String message) {
-        this.type = type;
-        this.message = message;
+    public PersonNotFoundException() {
     }
 
     public PersonNotFoundException(String message) {
-        this("person", message);
+        super(message);
     }
 
+    public PersonNotFoundException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
+    public PersonNotFoundException(Throwable cause) {
+        super(cause);
+    }
 }

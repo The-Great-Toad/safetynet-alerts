@@ -1,9 +1,9 @@
-package com.openclassrooms.safetynetalerts.repository;
+package com.openclassrooms.safetynetalerts.repositories;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.openclassrooms.safetynetalerts.exceptions.PersonNotFoundException;
-import com.openclassrooms.safetynetalerts.model.Person;
+import com.openclassrooms.safetynetalerts.models.Person;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class PersonRepository {
+public class PersonRepositoryImpl implements PersonRepository {
 
-    private static final Logger logger = LoggerFactory.getLogger(PersonRepository.class);
+    private static final Logger logger = LoggerFactory.getLogger(PersonRepositoryImpl.class);
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -48,7 +48,7 @@ public class PersonRepository {
         return p;
     }
 
-    public Person updatePerson(Person updatedPerson) throws PersonNotFoundException {
+    public Person updatePerson(Person updatedPerson) {
         String id = updatedPerson.getFirstName() + updatedPerson.getLastName();
 
         for (Person currentPerson : people) {
@@ -58,10 +58,10 @@ public class PersonRepository {
                 return currentPerson;
             }
         }
-        throw new PersonNotFoundException("Person not find in the list");
+        throw new PersonNotFoundException("Person with name %s %s not found!".formatted(updatedPerson.getFirstName(), updatedPerson.getLastName()));
     }
 
-    public Person deletePerson(Person p) throws PersonNotFoundException {
+    public Person deletePerson(Person p) {
         String id = p.getFirstName() + p.getLastName();
         int index = 0;
         for (Person currentPerson : people) {
@@ -70,7 +70,7 @@ public class PersonRepository {
             }
             index++;
         }
-        throw new PersonNotFoundException("Person not find in the list");
+        throw new PersonNotFoundException("Person with name %s %s not found!".formatted(p.getFirstName(), p.getLastName()));
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -1,19 +1,16 @@
 package com.openclassrooms.safetynetalerts;
 
-import com.openclassrooms.safetynetalerts.model.Person;
-import com.openclassrooms.safetynetalerts.service.PersonService;
+import com.openclassrooms.safetynetalerts.services.PersonServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import java.util.List;
-
 @SpringBootApplication
 public class SafetynetAlertsApplication implements CommandLineRunner {
 
 	@Autowired
-	private PersonService personService;
+	private PersonServiceImpl personServiceImpl;
 
 	public static void main(String[] args) {
 		SpringApplication.run(SafetynetAlertsApplication.class, args);
