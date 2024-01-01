@@ -54,7 +54,7 @@ public class PersonRepositoryImpl implements PersonRepository {
         for (Person currentPerson : people) {
             if ( (currentPerson.getFirstName() + currentPerson.getLastName()).equals(id) ) {
                 updatePersonInformation(currentPerson, updatedPerson);
-                System.out.printf("[INFO] Saving person: %s %n", updatedPerson);
+                System.out.printf("[INFO] Updating person: %s %n", updatedPerson);
                 return currentPerson;
             }
         }

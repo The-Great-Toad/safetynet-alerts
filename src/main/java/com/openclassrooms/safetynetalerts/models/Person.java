@@ -3,11 +3,15 @@ package com.openclassrooms.safetynetalerts.models;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Data
 @Component
+@NoArgsConstructor
+@AllArgsConstructor
 public class Person {
 
     @NotBlank(message = "First name is required")
@@ -30,6 +34,11 @@ public class Person {
     @Email(message = "Email is invalid")
     private String email;
 
+    public Person(String firstName, String lastName) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("Person{");
@@ -40,7 +49,7 @@ public class Person {
         sb.append(", zip='").append(zip).append('\'');
         sb.append(", phone='").append(phone).append('\'');
         sb.append(", email='").append(email).append('\'');
-        sb.append("}\n");
+        sb.append("}");
         return sb.toString();
     }
 }
