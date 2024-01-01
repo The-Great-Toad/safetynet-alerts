@@ -2,7 +2,7 @@ package com.openclassrooms.safetynetalerts.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.openclassrooms.safetynetalerts.models.Person;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -26,8 +26,8 @@ class PersonControllerTest {
     private ObjectMapper mapper;
     private static Person person;
 
-    @BeforeAll
-    static void setUp() {
+    @BeforeEach
+    void setUp() {
         person = new Person();
         person.setFirstName("Erick");
         person.setLastName("Pattisson");
@@ -82,14 +82,14 @@ class PersonControllerTest {
 
     @Test
     void updatePersonTest_personNotFoundException() throws Exception {
-        person.setEmail("erick.patt@outlook.com");
+        person.setLastName("Smith");
 
         mockMvc.perform(put("/person")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(person)))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Person with name Erick Pattisson not found!")));
+                .andExpect(content().string(containsString("Person with name Erick Smith not found!")));
     }
 
     @Test
@@ -107,11 +107,13 @@ class PersonControllerTest {
 
     @Test
     void deletePersonTest_personNotFoundException() throws Exception {
+        person.setLastName("Smith");
+
         mockMvc.perform(delete("/person")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(person)))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Person with name Erick Pattisson not found!")));
+                .andExpect(content().string(containsString("Person with name Erick Smith not found!")));
     }
 }
