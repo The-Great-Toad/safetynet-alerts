@@ -7,6 +7,7 @@ import com.openclassrooms.safetynetalerts.models.Person;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 import java.io.File;
@@ -22,13 +23,14 @@ public class PersonRepositoryImpl implements PersonRepository {
     @Autowired
     private ObjectMapper objectMapper;
     private static List<Person> people = new ArrayList<>();
+    @Value("${spring.person.filepath}")
+    private String personFilePath;
 
     public List<Person> getAllPerson() {
 
         if (people.isEmpty()) {
             try {
-                String filePath = "src/main/resources/person.json";
-                people = objectMapper.readValue(new File(filePath), new TypeReference<>() {});
+                people = objectMapper.readValue(new File(personFilePath), new TypeReference<>() {});
             } catch (IOException e) {
                 logger.error("[ERROR - PERSON.JSON] WHILE MAPPING DATA : {} ", e.getMessage());
             }
@@ -49,8 +51,12 @@ public class PersonRepositoryImpl implements PersonRepository {
     }
 
     public Person updatePerson(Person updatedPerson) {
-        String id = updatedPerson.getFirstName() + updatedPerson.getLastName();
 
+        if (people.isEmpty()) {
+            getAllPerson();
+        }
+
+        String id = updatedPerson.getFirstName() + updatedPerson.getLastName();
         for (Person currentPerson : people) {
             if ( (currentPerson.getFirstName() + currentPerson.getLastName()).equals(id) ) {
                 updatePersonInformation(currentPerson, updatedPerson);
@@ -62,6 +68,11 @@ public class PersonRepositoryImpl implements PersonRepository {
     }
 
     public Person deletePerson(Person p) {
+
+        if (people.isEmpty()) {
+            getAllPerson();
+        }
+
         String id = p.getFirstName() + p.getLastName();
         int index = 0;
         for (Person currentPerson : people) {

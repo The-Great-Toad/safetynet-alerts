@@ -1,12 +1,23 @@
 package com.openclassrooms.safetynetalerts.models;
 
+import jakarta.validation.constraints.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Component
 public class Firestation {
 
+    @NotBlank(message = "Address is required")
     private String address;
-    private String station;
+
+    @NotNull(message = "Station is required")
+    @Digits(integer = 1, fraction = 0, message = "Station is invalid")
+    @Min(value = 1, message = "Station should be between 1 and 4")
+    @Max(value = 4, message = "Station should be between 1 and 4")
+    private int station;
 }
