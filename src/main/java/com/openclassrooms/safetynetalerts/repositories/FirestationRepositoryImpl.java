@@ -79,11 +79,9 @@ public class FirestationRepositoryImpl implements FirestationRepository {
             getAllFirestation();
         }
 
-        for (Firestation firestation : firestations) {
-            if (firestation.getAddress().equals(toDelete.getAddress())) {
-                System.out.printf("[INFO] Deleting %s%n ", toDelete);
-                return firestations.remove(toDelete);
-            }
+        if (firestations.contains(toDelete)) {
+            System.out.printf("[INFO] Deleting %s%n ", toDelete);
+            return firestations.remove(toDelete);
         }
         throw new NoSuchElementException("Address %s not found!".formatted(toDelete.getAddress()));
     }
