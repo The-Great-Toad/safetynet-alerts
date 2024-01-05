@@ -1,8 +1,8 @@
-package com.openclassrooms.safetynetalerts.services;
+package com.openclassrooms.safetynetalerts.repositories.firestation;
 
 import com.openclassrooms.safetynetalerts.models.Firestation;
 
-public interface FirestationService {
+public interface FirestationRepository {
 
     Boolean saveFiresation(Firestation firestation);
 

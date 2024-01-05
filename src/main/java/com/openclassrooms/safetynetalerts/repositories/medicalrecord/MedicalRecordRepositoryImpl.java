@@ -1,0 +1,102 @@
+package com.openclassrooms.safetynetalerts.repositories.medicalrecord;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.openclassrooms.safetynetalerts.models.MedicalRecord;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Repository;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.NoSuchElementException;
+
+@Repository
+public class MedicalRecordRepositoryImpl implements MedicalRecordRepository {
+
+    private static final Logger logger = LoggerFactory.getLogger(MedicalRecordRepositoryImpl.class);
+
+    @Autowired
+    private ObjectMapper mapper;
+
+    @Value("${spring.filepath.medicalrecords}")
+    private String filePath;
+
+    public static List<MedicalRecord> medicalRecords = new ArrayList<>();
+
+    public List<MedicalRecord> getAllMedicalRecords() {
+        if (medicalRecords.isEmpty()) {
+            try {
+                medicalRecords = mapper.readValue(new File(filePath), new TypeReference<>() {});
+            } catch (IOException e) {
+                logger.error("[ERROR - PERSON.JSON] WHILE MAPPING DATA : {} ", e.getMessage());
+            }
+        }
+        return medicalRecords;
+    }
+
+    @Override
+    public Boolean saveMedicalRecord(MedicalRecord medicalRecord) {
+        String fullname = medicalRecord.getFirstName() + " " + medicalRecord.getLastName();
+
+        if (medicalRecords.isEmpty()) {
+            getAllMedicalRecords();
+            // todo: créer un repo DataRepo, qui retourne les listes
+            //  Il doit alimenter les listes au démarage de l'appli et c'est tout ! voir event PostConstruct ou CommandLineRunner
+        }
+        if (!medicalRecords.contains(medicalRecord)) {
+            logger.info("[INFO] Adding {}'s medical record to the list - {}", fullname, medicalRecord);
+            return medicalRecords.add(medicalRecord);
+        }
+        logger.error("[ERROR] While adding {}'s medical record to the list\nMedical Record:\n{}", fullname, medicalRecord);
+        throw new IllegalArgumentException("%s's medical record has already been saved!".formatted(fullname));
+    }
+
+    @Override
+    public MedicalRecord updateMedicalRecord(MedicalRecord toUpdate) {
+        String fullname = toUpdate.getFirstName() + " " + toUpdate.getLastName();
+
+        if (medicalRecords.isEmpty()) {
+            getAllMedicalRecords();
+        }
+        for (MedicalRecord currentMD : medicalRecords) {
+            String currentFullName = currentMD.getFirstName() + " " + currentMD.getLastName();
+            if (currentFullName.equals(fullname)) {
+                if (!currentMD.equals(toUpdate)) {
+                    int index = medicalRecords.indexOf(currentMD);
+                    logger.info("[INFO] Adding {}'s medical record to the list:\nOld MD: {}\nNew MD: {}", fullname, currentMD, toUpdate);
+                    medicalRecords.set(index, toUpdate);
+                    return medicalRecords.get(index);
+                }
+                throw new IllegalArgumentException("%s's medical record already up to date!".formatted(fullname));
+            }
+        }
+        throw new NoSuchElementException("%s's medical record not found!".formatted(fullname));
+    }
+
+    @Override
+    public MedicalRecord deleteMedicalRecord(MedicalRecord toDelete) {
+        String fullname = toDelete.getFirstName() + " " + toDelete.getLastName();
+
+        if (medicalRecords.isEmpty()) {
+            getAllMedicalRecords();
+        }
+        int index = -1;
+        for (MedicalRecord md : medicalRecords) {
+            String currentFullName = md.getFirstName() + " " + md.getLastName();
+            if (currentFullName.equals(fullname)) {
+                index = medicalRecords.indexOf(md);
+            }
+        }
+        if (index != -1) {
+            logger.info("[INFO] Deleting {}'s medical record from list", fullname);
+            return medicalRecords.remove(index);
+        }
+        logger.error("[ERROR - DELETING] Medical Record not found: {}", toDelete);
+        throw new NoSuchElementException("%s's medical record not found!".formatted(fullname));
+    }
+}

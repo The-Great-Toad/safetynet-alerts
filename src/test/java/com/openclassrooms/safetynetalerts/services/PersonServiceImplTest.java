@@ -1,7 +1,8 @@
 package com.openclassrooms.safetynetalerts.services;
 
 import com.openclassrooms.safetynetalerts.models.Person;
-import com.openclassrooms.safetynetalerts.repositories.PersonRepositoryImpl;
+import com.openclassrooms.safetynetalerts.repositories.person.PersonRepositoryImpl;
+import com.openclassrooms.safetynetalerts.services.person.PersonServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

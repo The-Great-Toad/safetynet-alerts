@@ -1,18 +1,33 @@
 package com.openclassrooms.safetynetalerts.models;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Past;
 import lombok.Data;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
 import java.util.List;
 
 @Data
 @Component
 public class MedicalRecord {
 
+    @NotEmpty(message = "First name is required")
     private String firstName;
+
+    @NotEmpty(message = "First name is required")
     private String lastName;
-    private String birthdate;
-    private List<Medication> medications;
+
+    @Past(message = "Date of birth must be a past date")
+    @JsonFormat(pattern = "DD/MM/YYYY")
+    private Date birthdate;
+
+//    @Valid
+//    private List<@Valid Medication> medications;
+    private List<String> medications;
+
     private List<String> allergies;
 
 }

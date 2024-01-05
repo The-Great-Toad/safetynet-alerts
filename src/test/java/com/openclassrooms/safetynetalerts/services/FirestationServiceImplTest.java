@@ -1,7 +1,8 @@
 package com.openclassrooms.safetynetalerts.services;
 
 import com.openclassrooms.safetynetalerts.models.Firestation;
-import com.openclassrooms.safetynetalerts.repositories.FirestationRepositoryImpl;
+import com.openclassrooms.safetynetalerts.repositories.firestation.FirestationRepositoryImpl;
+import com.openclassrooms.safetynetalerts.services.firestation.FirestationServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

@@ -1,16 +1,11 @@
 package com.openclassrooms.safetynetalerts;
 
-import com.openclassrooms.safetynetalerts.models.Firestation;
-import com.openclassrooms.safetynetalerts.models.Person;
-import com.openclassrooms.safetynetalerts.repositories.FirestationRepository;
-import com.openclassrooms.safetynetalerts.services.FirestationServiceImpl;
-import com.openclassrooms.safetynetalerts.services.PersonServiceImpl;
+import com.openclassrooms.safetynetalerts.services.firestation.FirestationServiceImpl;
+import com.openclassrooms.safetynetalerts.services.person.PersonServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-import java.util.List;
 
 @SpringBootApplication
 public class SafetynetAlertsApplication implements CommandLineRunner {

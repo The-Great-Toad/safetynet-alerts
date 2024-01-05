@@ -1,7 +1,7 @@
 package com.openclassrooms.safetynetalerts.controller;
 
 import com.openclassrooms.safetynetalerts.models.Firestation;
-import com.openclassrooms.safetynetalerts.services.FirestationServiceImpl;
+import com.openclassrooms.safetynetalerts.services.firestation.FirestationServiceImpl;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

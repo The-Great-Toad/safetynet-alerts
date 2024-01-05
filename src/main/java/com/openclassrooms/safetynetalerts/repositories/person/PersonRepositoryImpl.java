@@ -1,4 +1,4 @@
-package com.openclassrooms.safetynetalerts.repositories;
+package com.openclassrooms.safetynetalerts.repositories.person;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -23,7 +23,7 @@ public class PersonRepositoryImpl implements PersonRepository {
     @Autowired
     private ObjectMapper objectMapper;
     private static List<Person> people = new ArrayList<>();
-    @Value("${spring.person.filepath}")
+    @Value("${spring.filepath.person}")
     private String personFilePath;
 
     public List<Person> getAllPerson() {
