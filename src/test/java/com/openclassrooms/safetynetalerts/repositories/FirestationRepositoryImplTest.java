@@ -1,6 +1,7 @@
 package com.openclassrooms.safetynetalerts.repositories;
 
 import com.openclassrooms.safetynetalerts.models.Firestation;
+import com.openclassrooms.safetynetalerts.repositories.firestation.FirestationRepositoryImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

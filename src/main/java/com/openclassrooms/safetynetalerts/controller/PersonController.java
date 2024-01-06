@@ -2,7 +2,7 @@ package com.openclassrooms.safetynetalerts.controller;
 
 import com.openclassrooms.safetynetalerts.exceptions.PersonNotFoundException;
 import com.openclassrooms.safetynetalerts.models.Person;
-import com.openclassrooms.safetynetalerts.services.PersonServiceImpl;
+import com.openclassrooms.safetynetalerts.services.person.PersonServiceImpl;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

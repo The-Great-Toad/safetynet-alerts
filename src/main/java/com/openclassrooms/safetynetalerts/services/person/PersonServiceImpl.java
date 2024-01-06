@@ -1,7 +1,7 @@
-package com.openclassrooms.safetynetalerts.services;
+package com.openclassrooms.safetynetalerts.services.person;
 
 import com.openclassrooms.safetynetalerts.models.Person;
-import com.openclassrooms.safetynetalerts.repositories.PersonRepositoryImpl;
+import com.openclassrooms.safetynetalerts.repositories.person.PersonRepositoryImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,4 +1,4 @@
-package com.openclassrooms.safetynetalerts.services;
+package com.openclassrooms.safetynetalerts.services.person;
 
 import com.openclassrooms.safetynetalerts.models.Person;
 

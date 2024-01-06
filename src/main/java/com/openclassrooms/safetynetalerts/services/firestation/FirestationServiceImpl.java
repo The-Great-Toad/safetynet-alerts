@@ -1,7 +1,7 @@
-package com.openclassrooms.safetynetalerts.services;
+package com.openclassrooms.safetynetalerts.services.firestation;
 
 import com.openclassrooms.safetynetalerts.models.Firestation;
-import com.openclassrooms.safetynetalerts.repositories.FirestationRepositoryImpl;
+import com.openclassrooms.safetynetalerts.repositories.firestation.FirestationRepositoryImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

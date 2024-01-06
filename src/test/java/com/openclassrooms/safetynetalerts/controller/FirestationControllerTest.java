@@ -81,7 +81,7 @@ class FirestationControllerTest {
                 .andExpect(jsonPath("$.station", is(4)));
     }
 
-    @Disabled
+    @Test
     void updateFirestationTest_NoSuchElementException() throws Exception {
         firestation.setStation(4);
 
@@ -92,7 +92,7 @@ class FirestationControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Address 19 rue de la Tour not found!")));
 
-        // todo: clean context to prevent test failure
+        // todo: clean context to prevent test failure via une méthode de Data Repo (fonction reset par exemple appelée dans un @Before or @After)
     }
 
     @Test

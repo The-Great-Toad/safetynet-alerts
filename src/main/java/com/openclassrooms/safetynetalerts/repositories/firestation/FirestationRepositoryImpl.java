@@ -1,8 +1,9 @@
-package com.openclassrooms.safetynetalerts.repositories;
+package com.openclassrooms.safetynetalerts.repositories.firestation;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.openclassrooms.safetynetalerts.models.Firestation;
+import com.openclassrooms.safetynetalerts.repositories.person.PersonRepositoryImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,7 @@ public class FirestationRepositoryImpl implements FirestationRepository {
 
     private static List<Firestation> firestations = new ArrayList<>();
 
-    @Value("${spring.firestations.filepath}")
+    @Value("${spring.filepath.firestations}")
     private String firestationFilePath;
 
     public List<Firestation> getAllFirestation() {
