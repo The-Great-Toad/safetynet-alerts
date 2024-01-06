@@ -26,13 +26,20 @@ class PersonRepositoryImplTest {
     }
 
     @Test
-    void savePersonTest() {
+    void savePersonTest_success() {
         Person newPerson = new Person("Test", "To be save");
 
-        Person result = repository.savePerson(newPerson);
+        boolean result = repository.savePerson(newPerson);
 
-        assertNotNull(result);
-        assertEquals(newPerson, result);
+        assertTrue(result);
+    }
+
+    @Test
+    void savePersonTest_IllegalArgumentException() {
+        Person newPerson = new Person("Error", "To be save");
+        repository.savePerson(newPerson);
+
+        assertThrows(IllegalArgumentException.class, () -> repository.savePerson(newPerson));
     }
 
     @Test

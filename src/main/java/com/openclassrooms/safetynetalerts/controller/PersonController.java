@@ -22,7 +22,7 @@ public class PersonController {
     }
 
     @PostMapping
-    public Person savePerson(@Valid @RequestBody Person p) {
+    public boolean savePerson(@Valid @RequestBody Person p) {
         return personServiceImpl.savePerson(p);
     }
 

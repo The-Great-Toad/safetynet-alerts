@@ -39,12 +39,11 @@ class PersonServiceImplTest {
 
     @Test
     void savePerson() {
-        when(repository.savePerson(person)).thenReturn(person);
+        when(repository.savePerson(person)).thenReturn(true);
 
-        Person result = service.savePerson(person);
+        boolean result = service.savePerson(person);
 
-        assertNotNull(result);
-        assertEquals(person, result);
+        assertTrue(result);
     }
 
     @Test

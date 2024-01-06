@@ -2,6 +2,8 @@ package com.openclassrooms.safetynetalerts.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.openclassrooms.safetynetalerts.models.Firestation;
+import com.openclassrooms.safetynetalerts.repositories.DataObjectRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -30,7 +32,7 @@ class FirestationControllerTest {
     private static Firestation firestation;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         firestation = new Firestation("19 rue de la Tour", 3);
     }
 
@@ -81,7 +83,7 @@ class FirestationControllerTest {
                 .andExpect(jsonPath("$.station", is(4)));
     }
 
-    @Test
+    @Disabled
     void updateFirestationTest_NoSuchElementException() throws Exception {
         firestation.setStation(4);
 

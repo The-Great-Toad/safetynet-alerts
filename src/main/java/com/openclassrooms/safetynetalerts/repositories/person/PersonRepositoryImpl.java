@@ -22,80 +22,48 @@ public class PersonRepositoryImpl implements PersonRepository {
 
     @Autowired
     private ObjectMapper objectMapper;
-    private static List<Person> people = new ArrayList<>();
-    @Value("${spring.filepath.person}")
-    private String personFilePath;
+    public static List<Person> people;
 
     public List<Person> getAllPerson() {
-
-        if (people.isEmpty()) {
-            try {
-                people = objectMapper.readValue(new File(personFilePath), new TypeReference<>() {});
-            } catch (IOException e) {
-                logger.error("[ERROR - PERSON.JSON] WHILE MAPPING DATA : {} ", e.getMessage());
-            }
-        }
         return people;
     }
 
-    public Person savePerson(Person p) {
+    public boolean savePerson(Person p) {
 
-        if (people.isEmpty()) {
-            getAllPerson();
+        String fullName = p.getFirstName() + " " + p.getLastName();
+        if (people.contains(p)) {
+            logger.error("[PersonRepositoryImpl] Error while adding {} to the list\nPerson:\n{}", fullName, p);
+            throw new IllegalArgumentException("%s already in the list!".formatted(fullName));
         }
-
-        System.out.printf("[INFO] Saving person: %s %n", p.toString());
-        people.add(p);
-
-        return p;
+        logger.info("[PersonRepositoryImpl] - Adding {} to the list: {}", fullName, p);
+        return people.add(p);
     }
 
-    public Person updatePerson(Person updatedPerson) {
+    public Person updatePerson(Person toUpdate) {
 
-        if (people.isEmpty()) {
-            getAllPerson();
-        }
-
-        String id = updatedPerson.getFirstName() + updatedPerson.getLastName();
+        String fullName = toUpdate.getFirstName() + " " + toUpdate.getLastName();
         for (Person currentPerson : people) {
-            if ( (currentPerson.getFirstName() + currentPerson.getLastName()).equals(id) ) {
-                updatePersonInformation(currentPerson, updatedPerson);
-                System.out.printf("[INFO] Updating person: %s %n", updatedPerson);
-                return currentPerson;
+            if ( (fullName).equals(currentPerson.getFirstName() + " " + currentPerson.getLastName()) ) {
+                int index = people.indexOf(currentPerson);
+                people.set(index, toUpdate);
+                logger.info("[PersonRepositoryImpl] Updating {}'s details:\nOld details: {}\nNew details: {}", fullName, currentPerson, toUpdate);
+                return people.get(index);
             }
         }
-        throw new PersonNotFoundException("Person with name %s %s not found!".formatted(updatedPerson.getFirstName(), updatedPerson.getLastName()));
+        throw new PersonNotFoundException("%s not found!".formatted(fullName));
     }
 
-    public Person deletePerson(Person p) {
+    public Person deletePerson(Person toDelete) {
 
-        if (people.isEmpty()) {
-            getAllPerson();
-        }
-
-        String id = p.getFirstName() + p.getLastName();
+        String fullName = toDelete.getFirstName() + " " + toDelete.getLastName();
         int index = 0;
         for (Person currentPerson : people) {
-            if ( (currentPerson.getFirstName() + currentPerson.getLastName()).equals(id) ) {
+            if ( (fullName).equals(currentPerson.getFirstName() + " " + currentPerson.getLastName()) ) {
+                logger.info("[PersonRepositoryImpl] Deleting {} from list", fullName);
                 return people.remove(index);
             }
             index++;
         }
-        throw new PersonNotFoundException("Person with name %s %s not found!".formatted(p.getFirstName(), p.getLastName()));
+        throw new PersonNotFoundException("%s not found!".formatted(fullName));
     }
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //////////////////////////                      PRIVATE METHODS                  ///////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    private void updatePersonInformation(Person current, Person update) {
-        current.setLastName(update.getLastName());
-        current.setFirstName(update.getFirstName());
-        current.setAddress(update.getAddress());
-        current.setCity(update.getCity());
-        current.setZip(update.getZip());
-        current.setEmail(update.getEmail());
-        current.setPhone(update.getPhone());
-    }
-
 }
