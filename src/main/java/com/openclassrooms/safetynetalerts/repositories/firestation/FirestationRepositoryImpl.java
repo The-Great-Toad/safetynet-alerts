@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 @Repository
 public class FirestationRepositoryImpl implements FirestationRepository {
@@ -24,28 +25,15 @@ public class FirestationRepositoryImpl implements FirestationRepository {
     @Autowired
     private ObjectMapper objectMapper;
 
-    private static List<Firestation> firestations = new ArrayList<>();
-
-    @Value("${spring.filepath.firestations}")
-    private String firestationFilePath;
+    public static List<Firestation> firestations;
 
     public List<Firestation> getAllFirestation() {
-
-        if (firestations.isEmpty()) {
-            try {
-                firestations = objectMapper.readValue(new File(firestationFilePath), new TypeReference<>() {});
-            } catch (IOException e) {
-                logger.error("[ERROR - PERSON.JSON] WHILE MAPPING DATA : {} ", e.getMessage());
-            }
-        }
         return firestations;
     }
 
     @Override
     public Boolean saveFiresation(Firestation firestation) {
-        if (firestations.isEmpty()) {
-            getAllFirestation();
-        }
+
         if (firestations.contains(firestation)) {
             logger.error("[ERROR] - Firestation already in the list: {}", firestation);
             throw new IllegalArgumentException("Firestation already in the list!");
@@ -55,10 +43,6 @@ public class FirestationRepositoryImpl implements FirestationRepository {
 
     @Override
     public Firestation updateFirestation(Firestation toUpdate) {
-
-        if (firestations.isEmpty()) {
-            getAllFirestation();
-        }
 
         for (Firestation currentStation: firestations) {
             if (currentStation.getAddress().equals(toUpdate.getAddress())) {
@@ -76,14 +60,16 @@ public class FirestationRepositoryImpl implements FirestationRepository {
     @Override
     public Boolean deleteFirestation(Firestation toDelete) {
 
-        if (firestations.isEmpty()) {
-            getAllFirestation();
-        }
-
         if (firestations.contains(toDelete)) {
             System.out.printf("[INFO] Deleting %s%n ", toDelete);
             return firestations.remove(toDelete);
         }
         throw new NoSuchElementException("Address %s not found!".formatted(toDelete.getAddress()));
+    }
+
+    public List<Firestation> getFirestationByStation(int stationNumber) {
+        return firestations.stream()
+                .filter(firestation -> firestation.getStation() == stationNumber)
+                .toList();
     }
 }
