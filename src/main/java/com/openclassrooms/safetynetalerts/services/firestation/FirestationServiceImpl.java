@@ -1,59 +1,88 @@
 package com.openclassrooms.safetynetalerts.services.firestation;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.openclassrooms.safetynetalerts.models.Firestation;
+import com.openclassrooms.safetynetalerts.models.MedicalRecord;
 import com.openclassrooms.safetynetalerts.models.Person;
-import com.openclassrooms.safetynetalerts.repositories.firestation.FirestationRepositoryImpl;
-import com.openclassrooms.safetynetalerts.services.person.PersonServiceImpl;
+import com.openclassrooms.safetynetalerts.models.dto.PersonDto;
+import com.openclassrooms.safetynetalerts.models.dto.PersonsCoveredByFirestation;
+import com.openclassrooms.safetynetalerts.repositories.firestation.FirestationRepository;
+import com.openclassrooms.safetynetalerts.services.medicalrecord.MedicalRecordService;
+import com.openclassrooms.safetynetalerts.services.person.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.ZoneId;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class FirestationServiceImpl implements FirestationService {
 
     @Autowired
-    private FirestationRepositoryImpl firestationRepositoryImpl;
+    private FirestationRepository firestationRepository;
 
     @Autowired
-    private PersonServiceImpl personService;
+    private PersonService personService;
+
+    @Autowired
+    private MedicalRecordService medicalRecordService;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     public List<Firestation> getAllFirestation() {
-        return firestationRepositoryImpl.getAllFirestation();
+        return firestationRepository.getAllFirestation();
     }
 
     @Override
     public Boolean saveFiresation(Firestation firestation) {
-        return firestationRepositoryImpl.saveFiresation(firestation);
+        return firestationRepository.saveFiresation(firestation);
     }
 
     @Override
     public Firestation updateFirestation(Firestation toUpdate) {
-        return firestationRepositoryImpl.updateFirestation(toUpdate);
+        return firestationRepository.updateFirestation(toUpdate);
     }
 
     @Override
     public Boolean deleteFirestation(Firestation toDelete) {
-        return firestationRepositoryImpl.deleteFirestation(toDelete);
+        return firestationRepository.deleteFirestation(toDelete);
     }
 
-    public List<Person> getPersonCoveredByFirestation(int stationNumber) {
-        List<Person> result = new ArrayList<>();
+    public PersonsCoveredByFirestation getPersonCoveredByFirestation(int stationNumber) throws JsonProcessingException {
+        List<PersonDto> personsDto;
         // Retrieve firestations by station number
-        List<Firestation> firestations = firestationRepositoryImpl.getFirestationByStation(stationNumber);
-        firestations.forEach(System.out::println);
-        // Retrieve persons by addresses
-        List<Person> persons = personService.getAllPerson();
-        for (Firestation firestation : firestations) {
-            List<Person> people = persons.stream()
-                    .filter(person -> person.getAddress().equals(firestation.getAddress()))
-                    .toList();
-            result.addAll(people);
+        List<Firestation> firestations = firestationRepository.getFirestationByStation(stationNumber);
+        // Retrieve persons by firestation's address
+        List<Person> personsCoveredByFirestationProvided = personService.getPersonsCoveredByFirestation(firestations);
+        // Map Person to PersonDto
+        String personsJson = objectMapper.writeValueAsString(personsCoveredByFirestationProvided);
+        personsDto = objectMapper.readValue(personsJson, new TypeReference<>() {});
+
+        // Count the number of people over & under 18 years of age
+        List<MedicalRecord> medicalRecords = medicalRecordService.getAllMedicalRecords();
+        int numberAdults = 0;
+        int numberChildren = 0;
+        for (MedicalRecord md : medicalRecords) {
+            String mdId = md.getFirstName() + " " + md.getLastName();
+            for (PersonDto p : personsDto) {
+                String pId = p.getFirstName() + " " + p.getLastName();
+                if (mdId.equals(pId)) {
+                    int age = Period.between(md.getBirthdate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), LocalDate.now()).getYears();
+                    if (age >= 18) {
+                        numberAdults++;
+                    } else {
+                        numberChildren++;
+                    }
+                }
+            }
         }
-        // Format the person object; only keep ; prénom, nom, adresse, numéro de téléphone
-        // Add décompte du nombre d'adultes et du nombre d'enfants (tout individu âgé de 18 ans ou moins) dans la zone desservie.
-        return result;
+
+        return new PersonsCoveredByFirestation(personsDto, numberAdults, numberChildren);
     }
+
 }

@@ -1,8 +1,11 @@
 package com.openclassrooms.safetynetalerts;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.openclassrooms.safetynetalerts.models.Firestation;
 import com.openclassrooms.safetynetalerts.models.MedicalRecord;
 import com.openclassrooms.safetynetalerts.models.Person;
+import com.openclassrooms.safetynetalerts.models.dto.PersonDto;
+import com.openclassrooms.safetynetalerts.models.dto.PersonsCoveredByFirestation;
 import com.openclassrooms.safetynetalerts.services.firestation.FirestationServiceImpl;
 import com.openclassrooms.safetynetalerts.services.medicalrecord.MedicalRecordServiceImpl;
 import com.openclassrooms.safetynetalerts.services.person.PersonServiceImpl;
@@ -30,10 +33,12 @@ public class SafetynetAlertsApplication implements CommandLineRunner {
 	}
 
 	@Override
-	public void run(String... args) {
+	public void run(String... args) throws JsonProcessingException {
 //		List<Person> people = personServiceImpl.getAllPerson();
-		List<Person> people = firestationServiceImpl.getPersonCoveredByFirestation(2);
-		people.forEach(System.out::println);
+		PersonsCoveredByFirestation personsCoveredByFirestation = firestationServiceImpl.getPersonCoveredByFirestation(2);
+		personsCoveredByFirestation.getPersons().forEach(System.out::println);
+		System.out.printf("There is %d adults in the list %n", personsCoveredByFirestation.getNumberAdults());
+		System.out.printf("There is %d children in the list %n", personsCoveredByFirestation.getNumberChildren());
 //
 //		List<Firestation> firestations = firestationServiceImpl.getAllFirestation();
 //		firestations.forEach(System.out::println);

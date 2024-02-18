@@ -14,8 +14,6 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 public class Person {
 
-    //todo: créer une classe Data représentant le fichier de donnée avec pour parramétres une list person, list firestations & list medicalrecords
-
     @NotBlank(message = "First name is required")
 //    @Pattern(regexp = "^[a-zA-Z]$")
     private String firstName;
