@@ -23,31 +23,17 @@ public class MedicalRecordRepositoryImpl implements MedicalRecordRepository {
     @Autowired
     private ObjectMapper mapper;
 
-    @Value("${spring.filepath.medicalrecords}")
-    private String filePath;
-
-    public static List<MedicalRecord> medicalRecords = new ArrayList<>();
+    public static List<MedicalRecord> medicalRecords;
 
     public List<MedicalRecord> getAllMedicalRecords() {
-        if (medicalRecords.isEmpty()) {
-            try {
-                medicalRecords = mapper.readValue(new File(filePath), new TypeReference<>() {});
-            } catch (IOException e) {
-                logger.error("[ERROR - PERSON.JSON] WHILE MAPPING DATA : {} ", e.getMessage());
-            }
-        }
         return medicalRecords;
     }
 
     @Override
     public Boolean saveMedicalRecord(MedicalRecord medicalRecord) {
+
         String fullname = medicalRecord.getFirstName() + " " + medicalRecord.getLastName();
 
-        if (medicalRecords.isEmpty()) {
-            getAllMedicalRecords();
-            // todo: créer un repo DataRepo, qui retourne les listes
-            //  Il doit alimenter les listes au démarage de l'appli et c'est tout ! voir event PostConstruct ou CommandLineRunner
-        }
         if (!medicalRecords.contains(medicalRecord)) {
             logger.info("[INFO] Adding {}'s medical record to the list - {}", fullname, medicalRecord);
             return medicalRecords.add(medicalRecord);
@@ -58,11 +44,9 @@ public class MedicalRecordRepositoryImpl implements MedicalRecordRepository {
 
     @Override
     public MedicalRecord updateMedicalRecord(MedicalRecord toUpdate) {
+
         String fullname = toUpdate.getFirstName() + " " + toUpdate.getLastName();
 
-        if (medicalRecords.isEmpty()) {
-            getAllMedicalRecords();
-        }
         for (MedicalRecord currentMD : medicalRecords) {
             String currentFullName = currentMD.getFirstName() + " " + currentMD.getLastName();
             if (currentFullName.equals(fullname)) {
@@ -80,21 +64,16 @@ public class MedicalRecordRepositoryImpl implements MedicalRecordRepository {
 
     @Override
     public MedicalRecord deleteMedicalRecord(MedicalRecord toDelete) {
-        String fullname = toDelete.getFirstName() + " " + toDelete.getLastName();
 
-        if (medicalRecords.isEmpty()) {
-            getAllMedicalRecords();
-        }
-        int index = -1;
+        String fullname = toDelete.getFirstName() + " " + toDelete.getLastName();
+        int index = 0;
         for (MedicalRecord md : medicalRecords) {
             String currentFullName = md.getFirstName() + " " + md.getLastName();
             if (currentFullName.equals(fullname)) {
-                index = medicalRecords.indexOf(md);
+                logger.info("[INFO] Deleting {}'s medical record from list", fullname);
+                return medicalRecords.remove(index);
             }
-        }
-        if (index != -1) {
-            logger.info("[INFO] Deleting {}'s medical record from list", fullname);
-            return medicalRecords.remove(index);
+            index++;
         }
         logger.error("[ERROR - DELETING] Medical Record not found: {}", toDelete);
         throw new NoSuchElementException("%s's medical record not found!".formatted(fullname));

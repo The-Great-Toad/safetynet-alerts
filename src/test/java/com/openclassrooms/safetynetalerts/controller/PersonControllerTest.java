@@ -28,16 +28,14 @@ class PersonControllerTest {
 
     @BeforeEach
     void setUp() {
-        person = new Person();
-        person.setFirstName("Erick");
-        person.setLastName("Pattisson");
+        person = new Person("Erick", "Pattisson");
         person.setEmail("erick.patt@gmail.com");
     }
 
     @Test
     void getAllPersonTest() throws Exception {
         mockMvc.perform(get("/person"))
-                .andDo(print())
+//                .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].firstName", is("John")));
     }
@@ -47,11 +45,9 @@ class PersonControllerTest {
         mockMvc.perform(post("/person")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(person)))
-                .andDo(print())
+//                .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.firstName", is("Erick")))
-                .andExpect(jsonPath("$.lastName", is("Pattisson")))
-                .andExpect(jsonPath("$.email", is("erick.patt@gmail.com")));
+                .andExpect(content().string(containsString("true")));
     }
 
     @Test
@@ -61,7 +57,7 @@ class PersonControllerTest {
         mockMvc.perform(post("/person")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(newPerson)))
-                .andDo(print())
+//                .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.firstName", is("First name is required")))
                 .andExpect(jsonPath("$.lastName", is("Last name is required")));
@@ -75,7 +71,7 @@ class PersonControllerTest {
         mockMvc.perform(put("/person")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(person)))
-                .andDo(print())
+//                .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.email", is("erick.patt@outlook.com")));
     }
@@ -87,19 +83,17 @@ class PersonControllerTest {
         mockMvc.perform(put("/person")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(person)))
-                .andDo(print())
+//                .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Person with name Erick Smith not found!")));
+                .andExpect(content().string(containsString("Erick Smith not found!")));
     }
 
     @Test
     void deletePersonTest_success() throws Exception {
-        savePersonTest_success();
-
         mockMvc.perform(delete("/person")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(person)))
-                .andDo(print())
+//                .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.firstName", is("Erick")))
                 .andExpect(jsonPath("$.lastName", is("Pattisson")));
@@ -112,8 +106,8 @@ class PersonControllerTest {
         mockMvc.perform(delete("/person")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(person)))
-                .andDo(print())
+//                .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Person with name Erick Smith not found!")));
+                .andExpect(content().string(containsString("Erick Smith not found!")));
     }
 }

@@ -17,7 +17,7 @@ public class PersonServiceImpl implements PersonService {
         return personRepositoryImpl.getAllPerson();
     }
 
-    public Person savePerson(Person p){
+    public boolean savePerson(Person p){
         return personRepositoryImpl.savePerson(p);
     }
 
