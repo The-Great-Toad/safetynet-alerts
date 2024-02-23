@@ -13,4 +13,6 @@ public interface MedicalRecordService {
     MedicalRecord updateMedicalRecord(MedicalRecord toUpdate);
 
     MedicalRecord deleteMedicalRecord(MedicalRecord toDelete);
+
+    List<MedicalRecord> getMedicalRecordByFirstAndLastName(String firstName, String lastName);
 }

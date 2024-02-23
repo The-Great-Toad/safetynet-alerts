@@ -1,7 +1,8 @@
 package com.openclassrooms.safetynetalerts.services.person;
 
-import com.openclassrooms.safetynetalerts.models.Firestation;
+import com.openclassrooms.safetynetalerts.models.MedicalRecord;
 import com.openclassrooms.safetynetalerts.models.Person;
+import com.openclassrooms.safetynetalerts.models.dto.ChildDto;
 
 import java.util.List;
 
@@ -15,5 +16,9 @@ public interface PersonService {
 
     Person deletePerson(Person p);
 
-    List<Person> getPersonsCoveredByFirestation(List<Firestation> firestations);
+    List<ChildDto> getChildrenByAdress(String address);
+
+    List<String> getPhonesByFirestationNumber(int stationNumber);
+
+    Integer calculateAge(MedicalRecord md);
 }

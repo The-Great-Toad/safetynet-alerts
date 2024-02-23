@@ -14,10 +14,9 @@ import com.openclassrooms.safetynetalerts.services.person.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.Period;
-import java.time.ZoneId;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class FirestationServiceImpl implements FirestationService {
@@ -55,34 +54,57 @@ public class FirestationServiceImpl implements FirestationService {
 
     public PersonsCoveredByFirestation getPersonCoveredByFirestation(int stationNumber) throws JsonProcessingException {
         List<PersonDto> personsDto;
-        // Retrieve firestations by station number
-        List<Firestation> firestations = firestationRepository.getFirestationByStation(stationNumber);
+        List<String> addresses = firestationRepository.getAddressesByStationNumber(stationNumber);
+
         // Retrieve persons by firestation's address
-        List<Person> personsCoveredByFirestationProvided = personService.getPersonsCoveredByFirestation(firestations);
+        List<Person> persons = personService.getAllPerson();
+        List<Person> personsCoveredByFirestationProvided = persons.stream()
+                .filter(person -> addresses.contains(person.getAddress()))
+                .collect(Collectors.toList());
+
         // Map Person to PersonDto
         String personsJson = objectMapper.writeValueAsString(personsCoveredByFirestationProvided);
         personsDto = objectMapper.readValue(personsJson, new TypeReference<>() {});
 
         // Count the number of people over & under 18 years of age
-        List<MedicalRecord> medicalRecords = medicalRecordService.getAllMedicalRecords();
         int numberAdults = 0;
         int numberChildren = 0;
-        for (MedicalRecord md : medicalRecords) {
-            String mdId = md.getFirstName() + " " + md.getLastName();
-            for (PersonDto p : personsDto) {
-                String pId = p.getFirstName() + " " + p.getLastName();
-                if (mdId.equals(pId)) {
-                    int age = Period.between(md.getBirthdate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), LocalDate.now()).getYears();
-                    if (age >= 18) {
-                        numberAdults++;
-                    } else {
-                        numberChildren++;
-                    }
-                }
+
+        List<Integer> ages = personsDto.stream().flatMap(personDto -> {
+            MedicalRecord md = medicalRecordService.getMedicalRecordByFirstAndLastName(personDto.getFirstName(), personDto.getLastName()).get(0);
+            if (md != null) {
+                return Stream.of(personService.calculateAge(md));
+            } else {
+                return Stream.empty();
+            }
+        }).toList();
+
+        for (Integer age : ages) {
+            if (age >= 18) {
+                numberAdults++;
+            } else {
+                numberChildren++;
             }
         }
-
+//        for (MedicalRecord md : medicalRecords) {
+//            String mdId = md.getFirstName() + " " + md.getLastName();
+//            for (PersonDto p : personsDto) {
+//                String pId = p.getFirstName() + " " + p.getLastName();
+//                if (mdId.equals(pId)) {
+//                    int age = Period.between(md.getBirthdate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), LocalDate.now()).getYears();
+//                    if (age >= 18) {
+//                        numberAdults++;
+//                    } else {
+//                        numberChildren++;
+//                    }
+//                }
+//            }
+//        }
         return new PersonsCoveredByFirestation(personsDto, numberAdults, numberChildren);
     }
 
+    @Override
+    public List<String> getAddressesByStationNumber(int stationNumber) {
+        return firestationRepository.getAddressesByStationNumber(stationNumber);
+    }
 }

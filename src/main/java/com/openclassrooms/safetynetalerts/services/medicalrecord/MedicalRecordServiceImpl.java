@@ -31,4 +31,11 @@ public class MedicalRecordServiceImpl implements MedicalRecordService {
     public MedicalRecord deleteMedicalRecord(MedicalRecord toDelete) {
         return medicalRecordRepository.deleteMedicalRecord(toDelete);
     }
+
+    @Override
+    public List<MedicalRecord> getMedicalRecordByFirstAndLastName(String firstName, String lastName) {
+        return getAllMedicalRecords().stream()
+                .filter(medicalRecord -> (firstName+lastName).equals(medicalRecord.getFirstName()+medicalRecord.getLastName()))
+                .toList();
+    }
 }

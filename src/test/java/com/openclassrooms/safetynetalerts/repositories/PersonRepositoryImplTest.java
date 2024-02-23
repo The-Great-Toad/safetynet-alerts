@@ -19,7 +19,7 @@ class PersonRepositoryImplTest {
 
     @Test
     void getAllPersonTest() {
-        List<Person> result = repository.getAllPerson();
+        List<Person> result = repository.getListPersons();
 
         assertNotNull(result);
         assertTrue(result.size() >= 23);

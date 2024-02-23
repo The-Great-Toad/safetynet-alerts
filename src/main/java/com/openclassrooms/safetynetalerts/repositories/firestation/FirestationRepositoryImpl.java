@@ -1,18 +1,11 @@
 package com.openclassrooms.safetynetalerts.repositories.firestation;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.openclassrooms.safetynetalerts.models.Firestation;
 import com.openclassrooms.safetynetalerts.repositories.person.PersonRepositoryImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
@@ -21,9 +14,6 @@ import java.util.stream.Collectors;
 public class FirestationRepositoryImpl implements FirestationRepository {
 
     private static final Logger logger = LoggerFactory.getLogger(PersonRepositoryImpl.class);
-
-    @Autowired
-    private ObjectMapper objectMapper;
 
     public static List<Firestation> firestations;
 
@@ -67,9 +57,11 @@ public class FirestationRepositoryImpl implements FirestationRepository {
         throw new NoSuchElementException("Address %s not found!".formatted(toDelete.getAddress()));
     }
 
-    public List<Firestation> getFirestationByStation(int stationNumber) {
-        return firestations.stream()
+    @Override
+    public List<String> getAddressesByStationNumber(int stationNumber) {
+        return getAllFirestation().stream()
                 .filter(firestation -> firestation.getStation() == stationNumber)
-                .toList();
+                .map(Firestation::getAddress)
+                .collect(Collectors.toList());
     }
 }

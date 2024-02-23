@@ -2,7 +2,8 @@ package com.openclassrooms.safetynetalerts.controller;
 
 import com.openclassrooms.safetynetalerts.exceptions.PersonNotFoundException;
 import com.openclassrooms.safetynetalerts.models.Person;
-import com.openclassrooms.safetynetalerts.services.person.PersonServiceImpl;
+import com.openclassrooms.safetynetalerts.models.dto.ChildDto;
+import com.openclassrooms.safetynetalerts.services.person.PersonService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -10,30 +11,39 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("person")
 public class PersonController {
 
     @Autowired
-    private PersonServiceImpl personServiceImpl;
+    private PersonService personService;
 
-    @GetMapping
+    @GetMapping(path = "person")
     public List<Person> getAllPerson() {
-        return personServiceImpl.getAllPerson();
+        return personService.getAllPerson();
     }
 
-    @PostMapping
+    @PostMapping(path = "person")
     public boolean savePerson(@Valid @RequestBody Person p) {
-        return personServiceImpl.savePerson(p);
+        return personService.savePerson(p);
     }
 
-    @PutMapping
+    @PutMapping(path = "person")
     public Person updatePerson(@Valid @RequestBody Person p) throws PersonNotFoundException {
-        return personServiceImpl.updatePerson(p);
+        return personService.updatePerson(p);
     }
 
-    @DeleteMapping
+    @DeleteMapping(path = "person")
     public Person deletePerson(@Valid @RequestBody Person p) throws PersonNotFoundException {
-        return personServiceImpl.deletePerson(p);
+        return personService.deletePerson(p);
+    }
+
+    @GetMapping(path = "childAlert")
+    public List<ChildDto> getChildrenByAdress(@RequestParam String address) {
+        return personService.getChildrenByAdress(address);
+    }
+
+    @GetMapping(path = "phoneAlert")
+    public List<String> getPhonesByFirestationNumber(@RequestParam int stationNumber) {
+        return personService.getPhonesByFirestationNumber(stationNumber);
     }
 
 }

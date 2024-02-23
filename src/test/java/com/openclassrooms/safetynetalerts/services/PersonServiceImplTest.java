@@ -29,7 +29,7 @@ class PersonServiceImplTest {
 
     @Test
     void getAllPerson() {
-        when(repository.getAllPerson()).thenReturn(persons);
+        when(repository.getListPersons()).thenReturn(persons);
 
         List<Person> result = service.getAllPerson();
 
