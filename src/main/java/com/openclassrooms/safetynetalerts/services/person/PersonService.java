@@ -21,4 +21,6 @@ public interface PersonService {
     List<String> getPhonesByFirestationNumber(int stationNumber);
 
     Integer calculateAge(MedicalRecord md);
+
+    List<Person> getPersonsByAddress(String address);
 }

@@ -8,6 +8,8 @@ import com.openclassrooms.safetynetalerts.models.MedicalRecord;
 import com.openclassrooms.safetynetalerts.models.Person;
 import com.openclassrooms.safetynetalerts.models.dto.PersonDto;
 import com.openclassrooms.safetynetalerts.models.dto.PersonsCoveredByFirestation;
+import com.openclassrooms.safetynetalerts.models.dto.ResidentAndFirestationDto;
+import com.openclassrooms.safetynetalerts.models.dto.ResidentDto;
 import com.openclassrooms.safetynetalerts.repositories.firestation.FirestationRepository;
 import com.openclassrooms.safetynetalerts.services.medicalrecord.MedicalRecordService;
 import com.openclassrooms.safetynetalerts.services.person.PersonService;
@@ -71,7 +73,7 @@ public class FirestationServiceImpl implements FirestationService {
         int numberChildren = 0;
 
         List<Integer> ages = personsDto.stream().flatMap(personDto -> {
-            MedicalRecord md = medicalRecordService.getMedicalRecordByFirstAndLastName(personDto.getFirstName(), personDto.getLastName()).get(0);
+            MedicalRecord md = medicalRecordService.getMedicalRecordByFirstAndLastName(personDto.getFirstName(), personDto.getLastName());
             if (md != null) {
                 return Stream.of(personService.calculateAge(md));
             } else {
@@ -86,25 +88,35 @@ public class FirestationServiceImpl implements FirestationService {
                 numberChildren++;
             }
         }
-//        for (MedicalRecord md : medicalRecords) {
-//            String mdId = md.getFirstName() + " " + md.getLastName();
-//            for (PersonDto p : personsDto) {
-//                String pId = p.getFirstName() + " " + p.getLastName();
-//                if (mdId.equals(pId)) {
-//                    int age = Period.between(md.getBirthdate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), LocalDate.now()).getYears();
-//                    if (age >= 18) {
-//                        numberAdults++;
-//                    } else {
-//                        numberChildren++;
-//                    }
-//                }
-//            }
-//        }
+
         return new PersonsCoveredByFirestation(personsDto, numberAdults, numberChildren);
     }
 
     @Override
     public List<String> getAddressesByStationNumber(int stationNumber) {
         return firestationRepository.getAddressesByStationNumber(stationNumber);
+    }
+
+    @Override
+    public ResidentAndFirestationDto getResidentAndFirestationDto(String address) {
+        Firestation firestation = firestationRepository.getFirestationByAddress(address);
+        List<Person> persons = personService.getPersonsByAddress(address);
+
+        List<ResidentDto> residents = persons.stream().map(person -> {
+            MedicalRecord md = medicalRecordService.getMedicalRecordByFirstAndLastName(person.getFirstName(), person.getLastName());
+            int age = personService.calculateAge(md);
+            try {
+                String personString = objectMapper.writeValueAsString(person);
+                ResidentDto residentDto = objectMapper.readValue(personString, ResidentDto.class);
+                residentDto.setAge(age);
+                residentDto.setMedications(md.getMedications());
+                residentDto.setAllergies(md.getAllergies());
+                return residentDto;
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+        }).toList();
+
+        return new ResidentAndFirestationDto(residents, firestation.getStation());
     }
 }

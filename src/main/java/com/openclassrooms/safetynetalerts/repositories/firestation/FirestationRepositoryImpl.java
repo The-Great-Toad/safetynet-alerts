@@ -64,4 +64,12 @@ public class FirestationRepositoryImpl implements FirestationRepository {
                 .map(Firestation::getAddress)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public Firestation getFirestationByAddress(String address) {
+        return firestations.stream()
+                .filter(firestation -> firestation.getAddress().equals(address))
+                .toList()
+                .get(0);
+    }
 }

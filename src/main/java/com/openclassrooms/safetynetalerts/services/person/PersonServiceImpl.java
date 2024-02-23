@@ -65,7 +65,7 @@ public class PersonServiceImpl implements PersonService {
         List<Person> adults = new ArrayList<>();
 
         persons.forEach(person -> {
-            MedicalRecord md = medicalRecordService.getMedicalRecordByFirstAndLastName(person.getFirstName(), person.getLastName()).get(0);
+            MedicalRecord md = medicalRecordService.getMedicalRecordByFirstAndLastName(person.getFirstName(), person.getLastName());
             int age = calculateAge(md);
             if (age < 18) {
                 children.add(new ChildDto(person.getFirstName(), person.getLastName(), age));
@@ -84,5 +84,12 @@ public class PersonServiceImpl implements PersonService {
     public Integer calculateAge(MedicalRecord md) {
         LocalDate birthDate = md.getBirthdate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         return Period.between(birthDate, LocalDate.now()).getYears();
+    }
+
+    @Override
+    public List<Person> getPersonsByAddress(String address) {
+        return getAllPerson().stream()
+                .filter(person -> person.getAddress().equals(address))
+                .collect(Collectors.toList());
     }
 }

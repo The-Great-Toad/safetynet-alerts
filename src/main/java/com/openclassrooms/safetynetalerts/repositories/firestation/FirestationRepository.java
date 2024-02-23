@@ -14,4 +14,6 @@ public interface FirestationRepository {
     Boolean deleteFirestation(Firestation toDelete);
 
     List<String> getAddressesByStationNumber(int stationNumber);
+
+    Firestation getFirestationByAddress(String address);
 }

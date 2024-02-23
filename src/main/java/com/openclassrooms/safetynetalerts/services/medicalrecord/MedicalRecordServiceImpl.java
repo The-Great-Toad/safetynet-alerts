@@ -33,9 +33,10 @@ public class MedicalRecordServiceImpl implements MedicalRecordService {
     }
 
     @Override
-    public List<MedicalRecord> getMedicalRecordByFirstAndLastName(String firstName, String lastName) {
+    public MedicalRecord getMedicalRecordByFirstAndLastName(String firstName, String lastName) {
         return getAllMedicalRecords().stream()
                 .filter(medicalRecord -> (firstName+lastName).equals(medicalRecord.getFirstName()+medicalRecord.getLastName()))
-                .toList();
+                .toList()
+                .get(0);
     }
 }
