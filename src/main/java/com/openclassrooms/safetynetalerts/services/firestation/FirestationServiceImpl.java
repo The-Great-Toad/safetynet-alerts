@@ -6,17 +6,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.openclassrooms.safetynetalerts.models.Firestation;
 import com.openclassrooms.safetynetalerts.models.MedicalRecord;
 import com.openclassrooms.safetynetalerts.models.Person;
-import com.openclassrooms.safetynetalerts.models.dto.PersonDto;
-import com.openclassrooms.safetynetalerts.models.dto.PersonsCoveredByFirestation;
-import com.openclassrooms.safetynetalerts.models.dto.ResidentAndFirestationDto;
-import com.openclassrooms.safetynetalerts.models.dto.ResidentDto;
+import com.openclassrooms.safetynetalerts.models.dto.*;
 import com.openclassrooms.safetynetalerts.repositories.firestation.FirestationRepository;
 import com.openclassrooms.safetynetalerts.services.medicalrecord.MedicalRecordService;
 import com.openclassrooms.safetynetalerts.services.person.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -118,5 +118,42 @@ public class FirestationServiceImpl implements FirestationService {
         }).toList();
 
         return new ResidentAndFirestationDto(residents, firestation.getStation());
+    }
+
+    @Override
+    public HomeDto getHomeServedByStations(List<Integer> stations) {
+        Map<String, List<ResidentDto>> residents = new HashMap<>();
+
+        stations.forEach(station -> {
+            // Récupérer l'adresse de la station
+            Firestation firestation = firestationRepository.getFirestationByStationNumber(station);
+            // Récupérer les personnes by adresse
+            List<Person> persons = personService.getPersonsByAddress(firestation.getAddress());
+
+            persons.forEach(person -> {
+                try {
+                    // récupérer le dossier médicale
+                    MedicalRecord medicalRecord = medicalRecordService.getMedicalRecordByFirstAndLastName(person.getFirstName(), person.getLastName());
+                    // Calculer l'age
+                    int age = personService.calculateAge(medicalRecord);
+                    // Convertir les personnes récupérées en ResidentDto
+                    String personString = objectMapper.writeValueAsString(person);
+                    ResidentDto residentDto = objectMapper.readValue(personString, ResidentDto.class);
+                    residentDto.setAge(age);
+                    residentDto.setMedications(medicalRecord.getMedications());
+                    residentDto.setAllergies(medicalRecord.getAllergies());
+                    // Ajouter à la Map
+                    String address = person.getAddress();
+                    if (residents.containsKey(address)) {
+                        residents.get(address).add(residentDto);
+                    } else {
+                        residents.put(address, new ArrayList<>(List.of(residentDto)));
+                    }
+                } catch (JsonProcessingException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+        });
+        return new HomeDto(residents);
     }
 }

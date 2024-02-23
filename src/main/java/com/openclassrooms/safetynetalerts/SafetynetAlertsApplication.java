@@ -5,6 +5,7 @@ import com.openclassrooms.safetynetalerts.models.Firestation;
 import com.openclassrooms.safetynetalerts.models.MedicalRecord;
 import com.openclassrooms.safetynetalerts.models.Person;
 import com.openclassrooms.safetynetalerts.models.dto.ChildDto;
+import com.openclassrooms.safetynetalerts.models.dto.HomeDto;
 import com.openclassrooms.safetynetalerts.models.dto.PersonsCoveredByFirestation;
 import com.openclassrooms.safetynetalerts.models.dto.ResidentAndFirestationDto;
 import com.openclassrooms.safetynetalerts.services.firestation.FirestationService;
@@ -73,6 +74,13 @@ public class SafetynetAlertsApplication implements CommandLineRunner {
 		ResidentAndFirestationDto residentAndFirestationDto = firestationService.getResidentAndFirestationDto("1509 Culver St");
 		residentAndFirestationDto.getResidents().forEach(System.out::println);
 		System.out.println("Fire station number: " + residentAndFirestationDto.getFireStationNumber());
+
+		printMessage("1 HomeDto served by fire station");
+		HomeDto homeDto = firestationService.getHomeServedByStations(List.of(3));
+		homeDto.getHomes().forEach((k,v) -> System.out.printf("%s: %s%n", k, v));
+		printMessage("3 HomeDto served by fire station");
+		HomeDto homeDto2 = firestationService.getHomeServedByStations(List.of(2, 1, 4));
+		homeDto2.getHomes().forEach((k,v) -> System.out.printf("%s: %s%n", k, v));
 
 	}
 

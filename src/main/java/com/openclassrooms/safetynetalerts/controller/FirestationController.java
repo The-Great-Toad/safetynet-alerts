@@ -2,6 +2,7 @@ package com.openclassrooms.safetynetalerts.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.openclassrooms.safetynetalerts.models.Firestation;
+import com.openclassrooms.safetynetalerts.models.dto.HomeDto;
 import com.openclassrooms.safetynetalerts.models.dto.PersonsCoveredByFirestation;
 import com.openclassrooms.safetynetalerts.models.dto.ResidentAndFirestationDto;
 import com.openclassrooms.safetynetalerts.services.firestation.FirestationService;
@@ -53,5 +54,10 @@ public class FirestationController {
     @GetMapping("fire")
     public ResidentAndFirestationDto getResidentAndFirestationDto(@RequestParam String address) {
         return firestationService.getResidentAndFirestationDto(address);
+    }
+
+    @GetMapping(path = "flood")
+    public HomeDto getHomeServedByStations(@RequestParam List<Integer> stations) {
+        return firestationService.getHomeServedByStations(stations);
     }
 }

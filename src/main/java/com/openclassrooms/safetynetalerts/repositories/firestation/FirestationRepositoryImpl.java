@@ -72,4 +72,12 @@ public class FirestationRepositoryImpl implements FirestationRepository {
                 .toList()
                 .get(0);
     }
+
+    @Override
+    public Firestation getFirestationByStationNumber(Integer station) {
+        return firestations.stream()
+                .filter(firestation -> firestation.getStation() == station)
+                .toList()
+                .get(0);
+    }
 }
