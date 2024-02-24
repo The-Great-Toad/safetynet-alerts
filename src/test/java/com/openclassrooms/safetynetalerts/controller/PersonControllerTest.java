@@ -13,7 +13,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
@@ -31,6 +30,8 @@ class PersonControllerTest {
         person = new Person("Erick", "Pattisson");
         person.setEmail("erick.patt@gmail.com");
     }
+
+    // TODO: 24/02/2024 Test all endpoints
 
     @Test
     void getAllPersonTest() throws Exception {

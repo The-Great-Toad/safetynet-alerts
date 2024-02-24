@@ -15,6 +15,10 @@ public class MedicalRecordController {
     @Autowired
     private MedicalRecordServiceImpl medicalRecordService;
 
+    /******************************************************************************************************************
+                                                        CRUD ENDPOINTS
+     ******************************************************************************************************************/
+
     @GetMapping
     public List<MedicalRecord> getAllMedicalRecords() {
         return medicalRecordService.getAllMedicalRecords();

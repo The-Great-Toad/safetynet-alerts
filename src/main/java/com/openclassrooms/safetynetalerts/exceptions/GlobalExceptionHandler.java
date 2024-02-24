@@ -32,6 +32,8 @@ public class GlobalExceptionHandler {
         return errors;
     }
 
+    // TODO: 24/02/2024 handle all possible exceptions
+
     @ExceptionHandler(PersonNotFoundException.class)
     public ResponseEntity handlePersonNotFoundException(PersonNotFoundException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.OK);

@@ -28,4 +28,6 @@ public interface PersonService {
     List<PersonInfoDto> getPersonInfoByFirstAndLastName(String firstName, String lastName);
 
     List<Person> getPersonsByLastName(String lastName);
+
+    List<String> getResidentsEmailByCity(String city);
 }

@@ -125,4 +125,12 @@ public class PersonServiceImpl implements PersonService {
                 .filter(person -> person.getLastName().equalsIgnoreCase(lastName))
                 .toList();
     }
+
+    @Override
+    public List<String> getResidentsEmailByCity(String city) {
+        return getAllPerson().stream()
+                .filter(person -> person.getCity().equalsIgnoreCase(city))
+                .map(Person::getEmail)
+                .toList();
+    }
 }

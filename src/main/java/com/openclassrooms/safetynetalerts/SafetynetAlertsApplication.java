@@ -85,6 +85,11 @@ public class SafetynetAlertsApplication implements CommandLineRunner {
 		List<PersonInfoDto> personInfoDtoList = personService.getPersonInfoByFirstAndLastName("John", "Boyd");
 		personInfoDtoList.forEach(System.out::println);
 		printMessage("");
+
+		printMessage("List of residents email by city");
+		List<String> emails = personService.getResidentsEmailByCity("Culver");
+		emails.forEach(System.out::println);
+		printMessage("");
 	}
 
 	private void printMessage(String message) {

@@ -19,7 +19,7 @@ public class FirestationController {
     private FirestationService firestationService;
 
     /******************************************************************************************************************
-                                                        CRUD ENPOINTS
+                                                        CRUD ENDPOINTS
      ******************************************************************************************************************/
 
     @GetMapping(path = "firestation/all")

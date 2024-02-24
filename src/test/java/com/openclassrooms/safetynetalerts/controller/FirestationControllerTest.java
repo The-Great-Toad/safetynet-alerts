@@ -32,6 +32,8 @@ class FirestationControllerTest {
         firestation = new Firestation("19 rue de la Tour", 3);
     }
 
+    // TODO: 24/02/2024 Test all endpoints
+
     @Test
     void getAllFirestationTest() throws Exception {
 

@@ -18,7 +18,7 @@ public class PersonController {
     private PersonService personService;
 
     /******************************************************************************************************************
-                                                    CRUD ENPOINTS
+                                                    CRUD ENDPOINTS
      ******************************************************************************************************************/
 
     @GetMapping(path = "person")
@@ -46,12 +46,12 @@ public class PersonController {
      ******************************************************************************************************************/
 
     @GetMapping(path = "childAlert")
-    public List<ChildDto> getChildrenByAdress(@RequestParam String address) {
+    public List<ChildDto> getChildrenByAddress(@RequestParam String address) {
         return personService.getChildrenByAddress(address);
     }
 
     @GetMapping(path = "phoneAlert")
-    public List<String> getPhonesByFirestationNumber(@RequestParam int firestation) {
+    public List<String> getPhonesByFireStationNumber(@RequestParam int firestation) {
         return personService.getPhonesByFireStationNumber(firestation);
     }
 
@@ -62,6 +62,11 @@ public class PersonController {
         // TODO: 24/02/2024 implements bad request responses for all endpoints
 //        }
         return personService.getPersonInfoByFirstAndLastName(firstName, lastName);
+    }
+
+    @GetMapping(path = "communityEmail")
+    public List<String> getResidentsEmailByCity(@RequestParam String city) {
+        return personService.getResidentsEmailByCity(city);
     }
 
 }
