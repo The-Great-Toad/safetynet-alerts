@@ -28,7 +28,7 @@ class FirestationServiceImplTest {
     void getAllFirestationTest() {
         when(firestationRepository.getAllFirestation()).thenReturn(createFirestationsList());
 
-        List<Firestation> result = firestationService.getAllFirestation();
+        List<Firestation> result = firestationService.getAllFireStation();
 
         assertEquals(4, result.size());
         assertEquals(createFirestationsList(), result);
@@ -39,7 +39,7 @@ class FirestationServiceImplTest {
         Firestation firestation = new Firestation();
         when(firestationRepository.saveFiresation(any(Firestation.class))).thenReturn(true);
 
-        Boolean result = firestationService.saveFiresation(firestation);
+        Boolean result = firestationService.saveFireStation(firestation);
 
         assertTrue(result);
     }
@@ -49,7 +49,7 @@ class FirestationServiceImplTest {
         Firestation firestation = new Firestation("123", 4);
         when(firestationRepository.updateFirestation(any(Firestation.class))).thenReturn(firestation);
 
-        Firestation result = firestationService.updateFirestation(firestation);
+        Firestation result = firestationService.updateFireStation(firestation);
 
         assertEquals(firestation, result);
     }
@@ -59,7 +59,7 @@ class FirestationServiceImplTest {
         Firestation firestation = new Firestation();
         when(firestationRepository.deleteFirestation(any(Firestation.class))).thenReturn(true);
 
-        Boolean result = firestationService.deleteFirestation(firestation);
+        Boolean result = firestationService.deleteFireStation(firestation);
 
         assertTrue(result);
     }

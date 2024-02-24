@@ -35,26 +35,26 @@ public class FirestationServiceImpl implements FirestationService {
     @Autowired
     private ObjectMapper objectMapper;
 
-    public List<Firestation> getAllFirestation() {
+    public List<Firestation> getAllFireStation() {
         return firestationRepository.getAllFirestation();
     }
 
     @Override
-    public Boolean saveFiresation(Firestation firestation) {
+    public Boolean saveFireStation(Firestation firestation) {
         return firestationRepository.saveFiresation(firestation);
     }
 
     @Override
-    public Firestation updateFirestation(Firestation toUpdate) {
+    public Firestation updateFireStation(Firestation toUpdate) {
         return firestationRepository.updateFirestation(toUpdate);
     }
 
     @Override
-    public Boolean deleteFirestation(Firestation toDelete) {
+    public Boolean deleteFireStation(Firestation toDelete) {
         return firestationRepository.deleteFirestation(toDelete);
     }
 
-    public PersonsCoveredByFirestation getPersonCoveredByFirestation(int stationNumber) throws JsonProcessingException {
+    public PersonsCoveredByFirestation getPersonCoveredByFireStation(int stationNumber) throws JsonProcessingException {
         List<PersonDto> personsDto;
         List<String> addresses = firestationRepository.getAddressesByStationNumber(stationNumber);
 
@@ -98,7 +98,7 @@ public class FirestationServiceImpl implements FirestationService {
     }
 
     @Override
-    public ResidentAndFirestationDto getResidentAndFirestationDto(String address) {
+    public ResidentAndFirestationDto getResidentAndFireStationDto(String address) {
         Firestation firestation = firestationRepository.getFirestationByAddress(address);
         List<Person> persons = personService.getPersonsByAddress(address);
 

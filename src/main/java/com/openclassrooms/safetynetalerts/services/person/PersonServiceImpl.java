@@ -1,8 +1,11 @@
 package com.openclassrooms.safetynetalerts.services.person;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.openclassrooms.safetynetalerts.models.MedicalRecord;
 import com.openclassrooms.safetynetalerts.models.Person;
 import com.openclassrooms.safetynetalerts.models.dto.ChildDto;
+import com.openclassrooms.safetynetalerts.models.dto.PersonInfoDto;
 import com.openclassrooms.safetynetalerts.repositories.person.PersonRepository;
 import com.openclassrooms.safetynetalerts.services.firestation.FirestationService;
 import com.openclassrooms.safetynetalerts.services.medicalrecord.MedicalRecordService;
@@ -25,6 +28,8 @@ public class PersonServiceImpl implements PersonService {
     private MedicalRecordService medicalRecordService;
     @Autowired
     private FirestationService firestationService;
+    @Autowired
+    private ObjectMapper objectMapper;
 
     public List<Person> getAllPerson() {
         return personRepository.getListPersons();
@@ -43,13 +48,13 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public List<ChildDto> getChildrenByAdress(String address) {
+    public List<ChildDto> getChildrenByAddress(String address) {
         List<Person> persons = personRepository.getPersonByAddress(address);
         return getChildrenFromPersonList(persons);
     }
 
     @Override
-    public List<String> getPhonesByFirestationNumber(int stationNumber) {
+    public List<String> getPhonesByFireStationNumber(int stationNumber) {
         // Récupérer les adresses desservies par la caserne de pompiers
         List<String> addresses = firestationService.getAddressesByStationNumber(stationNumber);
 
@@ -91,5 +96,33 @@ public class PersonServiceImpl implements PersonService {
         return getAllPerson().stream()
                 .filter(person -> person.getAddress().equals(address))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<PersonInfoDto> getPersonInfoByFirstAndLastName(String firstName, String lastName) {
+        List<PersonInfoDto> personsInfoDto = new ArrayList<>();
+        List<Person> persons = getPersonsByLastName(lastName);
+        persons.forEach(person -> {
+            MedicalRecord medicalRecord = medicalRecordService.getMedicalRecordByFirstAndLastName(person.getFirstName(), person.getLastName());
+            int age = calculateAge(medicalRecord);
+            try {
+                String personString = objectMapper.writeValueAsString(person);
+                PersonInfoDto personInfoDto = objectMapper.readValue(personString, PersonInfoDto.class);
+                personInfoDto.setAge(age);
+                personInfoDto.setMedications(medicalRecord.getMedications());
+                personInfoDto.setAllergies(medicalRecord.getAllergies());
+                personsInfoDto.add(personInfoDto);
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        return personsInfoDto;
+    }
+
+    @Override
+    public List<Person> getPersonsByLastName(String lastName) {
+        return getAllPerson().stream()
+                .filter(person -> person.getLastName().equalsIgnoreCase(lastName))
+                .toList();
     }
 }

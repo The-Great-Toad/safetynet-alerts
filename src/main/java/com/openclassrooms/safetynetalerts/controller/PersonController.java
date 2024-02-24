@@ -3,6 +3,7 @@ package com.openclassrooms.safetynetalerts.controller;
 import com.openclassrooms.safetynetalerts.exceptions.PersonNotFoundException;
 import com.openclassrooms.safetynetalerts.models.Person;
 import com.openclassrooms.safetynetalerts.models.dto.ChildDto;
+import com.openclassrooms.safetynetalerts.models.dto.PersonInfoDto;
 import com.openclassrooms.safetynetalerts.services.person.PersonService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,10 @@ public class PersonController {
 
     @Autowired
     private PersonService personService;
+
+    /******************************************************************************************************************
+                                                    CRUD ENPOINTS
+     ******************************************************************************************************************/
 
     @GetMapping(path = "person")
     public List<Person> getAllPerson() {
@@ -36,14 +41,27 @@ public class PersonController {
         return personService.deletePerson(p);
     }
 
+    /******************************************************************************************************************
+                                                    URLs ENDPOINTS
+     ******************************************************************************************************************/
+
     @GetMapping(path = "childAlert")
     public List<ChildDto> getChildrenByAdress(@RequestParam String address) {
-        return personService.getChildrenByAdress(address);
+        return personService.getChildrenByAddress(address);
     }
 
     @GetMapping(path = "phoneAlert")
     public List<String> getPhonesByFirestationNumber(@RequestParam int firestation) {
-        return personService.getPhonesByFirestationNumber(firestation);
+        return personService.getPhonesByFireStationNumber(firestation);
+    }
+
+    @GetMapping(path = "personInfo")
+    public List<PersonInfoDto> getPersonInfoByFirstAndLastName(@RequestParam String firstName, @RequestParam String lastName) {
+//        if (Strings.isBlank(lastName)) {
+//            return ResponseEntity.badRequest();
+        // TODO: 24/02/2024 implements bad request responses for all endpoints
+//        }
+        return personService.getPersonInfoByFirstAndLastName(firstName, lastName);
     }
 
 }

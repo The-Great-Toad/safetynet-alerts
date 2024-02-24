@@ -24,22 +24,22 @@ public class FirestationController {
 
     @GetMapping(path = "firestation/all")
     public List<Firestation> getAllFirestation() {
-        return firestationService.getAllFirestation();
+        return firestationService.getAllFireStation();
     }
 
     @PostMapping(path = "firestation")
     public Boolean saveFirestation(@Valid @RequestBody Firestation firestation) {
-        return firestationService.saveFiresation(firestation);
+        return firestationService.saveFireStation(firestation);
     }
 
     @PutMapping(path = "firestation")
     public Firestation updateFirestation(@Valid @RequestBody Firestation toUpdate) {
-        return firestationService.updateFirestation(toUpdate);
+        return firestationService.updateFireStation(toUpdate);
     }
 
     @DeleteMapping(path = "firestation")
     public Boolean deleteFirestation(@Valid @RequestBody Firestation toDelete) {
-        return firestationService.deleteFirestation(toDelete);
+        return firestationService.deleteFireStation(toDelete);
     }
 
     /******************************************************************************************************************
@@ -48,12 +48,12 @@ public class FirestationController {
 
     @GetMapping(path = "firestation")
     public PersonsCoveredByFirestation getPersonCoveredByFirestation(@RequestParam int stationNumber) throws JsonProcessingException {
-        return firestationService.getPersonCoveredByFirestation(stationNumber);
+        return firestationService.getPersonCoveredByFireStation(stationNumber);
     }
 
     @GetMapping("fire")
     public ResidentAndFirestationDto getResidentAndFirestationDto(@RequestParam String address) {
-        return firestationService.getResidentAndFirestationDto(address);
+        return firestationService.getResidentAndFireStationDto(address);
     }
 
     @GetMapping(path = "flood")

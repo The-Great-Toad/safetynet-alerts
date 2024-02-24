@@ -10,19 +10,19 @@ import java.util.List;
 
 public interface FirestationService {
 
-    List<Firestation> getAllFirestation();
+    List<Firestation> getAllFireStation();
 
-    Boolean saveFiresation(Firestation firestation);
+    Boolean saveFireStation(Firestation firestation);
 
-    Firestation updateFirestation(Firestation toUpdate);
+    Firestation updateFireStation(Firestation toUpdate);
 
-    Boolean deleteFirestation(Firestation toDelete);
+    Boolean deleteFireStation(Firestation toDelete);
 
-    PersonsCoveredByFirestation getPersonCoveredByFirestation(int stationNumber) throws JsonProcessingException;
+    PersonsCoveredByFirestation getPersonCoveredByFireStation(int stationNumber) throws JsonProcessingException;
 
     List<String> getAddressesByStationNumber(int stationNumber);
 
-    ResidentAndFirestationDto getResidentAndFirestationDto(String address);
+    ResidentAndFirestationDto getResidentAndFireStationDto(String address);
 
     HomeDto getHomeServedByStations(List<Integer> stations);
 }

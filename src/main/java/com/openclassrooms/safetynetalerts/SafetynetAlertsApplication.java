@@ -4,10 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.openclassrooms.safetynetalerts.models.Firestation;
 import com.openclassrooms.safetynetalerts.models.MedicalRecord;
 import com.openclassrooms.safetynetalerts.models.Person;
-import com.openclassrooms.safetynetalerts.models.dto.ChildDto;
-import com.openclassrooms.safetynetalerts.models.dto.HomeDto;
-import com.openclassrooms.safetynetalerts.models.dto.PersonsCoveredByFirestation;
-import com.openclassrooms.safetynetalerts.models.dto.ResidentAndFirestationDto;
+import com.openclassrooms.safetynetalerts.models.dto.*;
 import com.openclassrooms.safetynetalerts.services.firestation.FirestationService;
 import com.openclassrooms.safetynetalerts.services.medicalrecord.MedicalRecordService;
 import com.openclassrooms.safetynetalerts.services.person.PersonService;
@@ -44,7 +41,7 @@ public class SafetynetAlertsApplication implements CommandLineRunner {
 		printMessage("");
 
 		printMessage("List of all fire stations");
-		List<Firestation> firestations = firestationService.getAllFirestation();
+		List<Firestation> firestations = firestationService.getAllFireStation();
 		firestations.forEach(System.out::println);
 		printMessage("");
 
@@ -54,26 +51,27 @@ public class SafetynetAlertsApplication implements CommandLineRunner {
 		printMessage("");
 
 		printMessage("List of people covered by a fire station");
-		PersonsCoveredByFirestation personsCoveredByFirestation = firestationService.getPersonCoveredByFirestation(2);
+		PersonsCoveredByFirestation personsCoveredByFirestation = firestationService.getPersonCoveredByFireStation(2);
 		personsCoveredByFirestation.getPersons().forEach(System.out::println);
 		System.out.printf("NumberAdults: %d %n", personsCoveredByFirestation.getNumberAdults());
 		System.out.printf("NumberChildren: %d %n", personsCoveredByFirestation.getNumberChildren());
 		printMessage("");
 
 		printMessage("List of children by address");
-		List<ChildDto> children = personService.getChildrenByAdress("1509 Culver St");
+		List<ChildDto> children = personService.getChildrenByAddress("1509 Culver St");
 		children.forEach(System.out::println);
 		printMessage("");
 
 		printMessage("List of phones number by fire station number");
-		List<String> phones = personService.getPhonesByFirestationNumber(2);
+		List<String> phones = personService.getPhonesByFireStationNumber(2);
 		phones.forEach(System.out::println);
 		printMessage("");
 
 		printMessage("List of residents and fire station by address");
-		ResidentAndFirestationDto residentAndFirestationDto = firestationService.getResidentAndFirestationDto("1509 Culver St");
+		ResidentAndFirestationDto residentAndFirestationDto = firestationService.getResidentAndFireStationDto("1509 Culver St");
 		residentAndFirestationDto.getResidents().forEach(System.out::println);
 		System.out.println("Fire station number: " + residentAndFirestationDto.getFireStationNumber());
+		printMessage("");
 
 		printMessage("1 HomeDto served by fire station");
 		HomeDto homeDto = firestationService.getHomeServedByStations(List.of(3));
@@ -81,7 +79,12 @@ public class SafetynetAlertsApplication implements CommandLineRunner {
 		printMessage("3 HomeDto served by fire station");
 		HomeDto homeDto2 = firestationService.getHomeServedByStations(List.of(2, 1, 4));
 		homeDto2.getHomes().forEach((k,v) -> System.out.printf("%s: %s%n", k, v));
+		printMessage("");
 
+		printMessage("List Person information");
+		List<PersonInfoDto> personInfoDtoList = personService.getPersonInfoByFirstAndLastName("John", "Boyd");
+		personInfoDtoList.forEach(System.out::println);
+		printMessage("");
 	}
 
 	private void printMessage(String message) {
