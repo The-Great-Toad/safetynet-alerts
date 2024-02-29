@@ -73,62 +73,24 @@ class PersonRepositoryImplTest {
         assertNotNull(result);
         assertEquals(toDelete, result);
     }
-}
 
-//@SpringBootTest
-//@ExtendWith(MockitoExtension.class)
-//class PersonRepositoryImplTest {
-//
-//    @InjectMocks
-//    private PersonRepositoryImpl repository;
-//    @Mock
-//    private ObjectMapper mapper;
-//
-//    @Test
-//    void getAllPersonTest_success() throws IOException {
-//        when(mapper.readValue(any(File.class), any(TypeReference.class))).thenReturn(createPersonList());
-//
-//        List<Person> result = repository.getAllPerson();
-//
-//        assertNotNull(result);
-//        assertEquals(createPersonList(), result);
-//    }
-//
-//    @Test
-//    void getAllPersonTest_IOException() throws IOException {
-//        when(mapper.readValue(any(File.class), any(TypeReference.class))).thenThrow(new IOException("file doesn't exits!"));
-//
-//        List<Person> result = repository.getAllPerson();
-//
-//        assertEquals(new ArrayList<Person>(), result);
-//    }
-//
-//    @Test
-//    void savePersonTest() throws IOException {
-//        Person newPerson = new Person("Test", "To be save");
-//        when(mapper.readValue(any(File.class), any(TypeReference.class))).thenReturn(createPersonList());
-//
-//        Person result = repository.savePerson(newPerson);
-//
-//        assertNotNull(result);
-//        assertEquals(newPerson, result);
-//    }
-//
-//    @Test
-//    void updatePersonTest() {
-//    }
-//
-//    @Test
-//    void deletePersonTest() {
-//    }
-//
-//
-//    private static List<Person> createPersonList() {
-//        Person p1 = new Person("Erick", "Pattisson");
-//        Person p2 = new Person("Sam", "Embet");
-//        Person p3 = new Person("Todd", "You");
-//        Person p4 = new Person("Brad", "Rie");
-//
-//        return asList(p1, p2, p3, p4);
-//    }
-//}
+    @Test
+    void getPersonsByLastNameTest() {
+        String lastName = "Boyd";
+
+        List<Person> results = repository.getPersonsByLastName(lastName);
+
+        assertEquals(6, results.size());
+        results.forEach(result -> assertEquals(lastName, result.getLastName()));
+    }
+
+    @Test
+    void getPersonByAddressTest() {
+        String address = "1509 Culver St";
+
+        List<Person> results = repository.getPersonByAddress(address);
+
+        assertEquals(5, results.size());
+        results.forEach(result -> assertEquals(address, result.getAddress()));
+    }
+}

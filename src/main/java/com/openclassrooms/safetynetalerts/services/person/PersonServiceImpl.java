@@ -17,7 +17,6 @@ import java.time.Period;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class PersonServiceImpl implements PersonService {
@@ -48,6 +47,45 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
+    public List<Person> getPersonsByLastName(String lastName) {
+        return personRepository.getPersonsByLastName(lastName);
+    }
+
+    @Override
+    public List<Person> getPersonsByAddress(String address) {
+        return personRepository.getPersonByAddress(address);
+    }
+
+    @Override
+    public List<PersonInfoDto> getPersonInfoByFirstAndLastName(String firstName, String lastName) {
+        List<PersonInfoDto> personsInfoDto = new ArrayList<>();
+        List<Person> persons = getPersonsByLastName(lastName);
+        persons.forEach(person -> {
+            MedicalRecord medicalRecord = medicalRecordService.getMedicalRecordByFirstAndLastName(person.getFirstName(), person.getLastName());
+            int age = calculateAge(medicalRecord);
+            try {
+                String personString = objectMapper.writeValueAsString(person);
+                PersonInfoDto personInfoDto = objectMapper.readValue(personString, PersonInfoDto.class);
+                personInfoDto.setAge(age);
+                personInfoDto.setMedications(medicalRecord.getMedications());
+                personInfoDto.setAllergies(medicalRecord.getAllergies());
+                personsInfoDto.add(personInfoDto);
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        return personsInfoDto;
+    }
+
+    @Override
+    public List<String> getResidentsEmailByCity(String city) {
+        return getAllPerson().stream()
+                .filter(person -> person.getCity().equalsIgnoreCase(city))
+                .map(Person::getEmail)
+                .toList();
+    }
+
+    @Override
     public List<ChildDto> getChildrenByAddress(String address) {
         List<Person> persons = personRepository.getPersonByAddress(address);
         return getChildrenFromPersonList(persons);
@@ -62,7 +100,7 @@ public class PersonServiceImpl implements PersonService {
         return personRepository.getListPersons().stream()
                 .filter(person -> addresses.contains(person.getAddress()))
                 .map(Person::getPhone)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private List<ChildDto> getChildrenFromPersonList(List<Person> persons) {
@@ -89,48 +127,5 @@ public class PersonServiceImpl implements PersonService {
     public Integer calculateAge(MedicalRecord md) {
         LocalDate birthDate = md.getBirthdate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         return Period.between(birthDate, LocalDate.now()).getYears();
-    }
-
-    @Override
-    public List<Person> getPersonsByAddress(String address) {
-        return getAllPerson().stream()
-                .filter(person -> person.getAddress().equals(address))
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<PersonInfoDto> getPersonInfoByFirstAndLastName(String firstName, String lastName) {
-        List<PersonInfoDto> personsInfoDto = new ArrayList<>();
-        List<Person> persons = getPersonsByLastName(lastName);
-        persons.forEach(person -> {
-            MedicalRecord medicalRecord = medicalRecordService.getMedicalRecordByFirstAndLastName(person.getFirstName(), person.getLastName());
-            int age = calculateAge(medicalRecord);
-            try {
-                String personString = objectMapper.writeValueAsString(person);
-                PersonInfoDto personInfoDto = objectMapper.readValue(personString, PersonInfoDto.class);
-                personInfoDto.setAge(age);
-                personInfoDto.setMedications(medicalRecord.getMedications());
-                personInfoDto.setAllergies(medicalRecord.getAllergies());
-                personsInfoDto.add(personInfoDto);
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
-            }
-        });
-        return personsInfoDto;
-    }
-
-    @Override
-    public List<Person> getPersonsByLastName(String lastName) {
-        return getAllPerson().stream()
-                .filter(person -> person.getLastName().equalsIgnoreCase(lastName))
-                .toList();
-    }
-
-    @Override
-    public List<String> getResidentsEmailByCity(String city) {
-        return getAllPerson().stream()
-                .filter(person -> person.getCity().equalsIgnoreCase(city))
-                .map(Person::getEmail)
-                .toList();
     }
 }

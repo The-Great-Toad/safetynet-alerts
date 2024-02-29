@@ -10,8 +10,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.CoreMatchers.is;
+
+import static org.hamcrest.CoreMatchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -31,7 +31,9 @@ class PersonControllerTest {
         person.setEmail("erick.patt@gmail.com");
     }
 
-    // TODO: 24/02/2024 Test all endpoints
+    /******************************************************************************************************************
+                                                TEST CRUD ENDPOINTS
+     ******************************************************************************************************************/
 
     @Test
     void getAllPersonTest() throws Exception {
@@ -110,5 +112,53 @@ class PersonControllerTest {
 //                .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Erick Smith not found!")));
+    }
+
+    /******************************************************************************************************************
+                                                TEST URLs ENDPOINTS
+     ******************************************************************************************************************/
+
+    @Test
+    void getChildrenByAddressTest() throws Exception {
+        mockMvc.perform(get("/childAlert")
+                        .param("address","1509 Culver St")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].firstName", is("Tenley")))
+                .andExpect(jsonPath("$[0].lastName", is("Boyd")))
+                .andExpect(jsonPath("$[0].age", is(12)));
+    }
+
+    @Test
+    void getPhonesByFireStationNumberTest() throws Exception {
+        mockMvc.perform(get("/phoneAlert")
+                        .param("stationNumber","3")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0]", is("841-874-6512")))
+                .andExpect(jsonPath("$[1]", is("841-874-6513")));
+    }
+
+    @Test
+    void getPersonInfoByFirstAndLastNameTest() throws Exception {
+        mockMvc.perform(get("/personInfo")
+                        .param("firstName","John")
+                        .param("lastName","Boyd")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].lastName", is("Boyd")))
+                .andExpect(jsonPath("$[0].address", is("1509 Culver St")))
+                .andExpect(jsonPath("$[0].age", is(40)))
+                .andExpect(jsonPath("$[0].email", is("jaboyd@email.com")));
+    }
+
+    @Test
+    void getResidentsEmailByCityTest() throws Exception {
+        mockMvc.perform(get("/communityEmail")
+                        .param("city","Culver")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0]", is("jaboyd@email.com")))
+                .andExpect(jsonPath("$[1]", is("drk@email.com")));
     }
 }

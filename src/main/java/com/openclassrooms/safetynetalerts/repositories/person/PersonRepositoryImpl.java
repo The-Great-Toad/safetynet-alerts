@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Objects;
 
 @Repository
 public class PersonRepositoryImpl implements PersonRepository {
@@ -64,9 +64,26 @@ public class PersonRepositoryImpl implements PersonRepository {
     }
 
     @Override
+    public List<Person> getPersonsByLastName(String lastName) {
+        return people.stream()
+                .filter(person -> {
+                    if (Objects.nonNull(person.getLastName())) {
+                        return person.getLastName().equalsIgnoreCase(lastName);
+                    }
+                    return false;
+                })
+                .toList();
+    }
+
+    @Override
     public List<Person> getPersonByAddress(String address) {
         return people.stream()
-                .filter(person -> person.getAddress().equals(address))
-                .collect(Collectors.toList());
+                .filter(person -> {
+                    if (Objects.nonNull(person.getAddress())) {
+                        return person.getAddress().equals(address);
+                    }
+                    return false;
+                })
+                .toList();
     }
 }

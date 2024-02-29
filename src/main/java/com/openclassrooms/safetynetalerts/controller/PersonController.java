@@ -51,8 +51,8 @@ public class PersonController {
     }
 
     @GetMapping(path = "phoneAlert")
-    public List<String> getPhonesByFireStationNumber(@RequestParam int firestation) {
-        return personService.getPhonesByFireStationNumber(firestation);
+    public List<String> getPhonesByFireStationNumber(@RequestParam int stationNumber) {
+        return personService.getPhonesByFireStationNumber(stationNumber);
     }
 
     @GetMapping(path = "personInfo")
