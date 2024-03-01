@@ -2,14 +2,14 @@ package com.openclassrooms.safetynetalerts.models;
 
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.stereotype.Component;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Component
+@Builder
 public class Firestation {
 
     @NotBlank(message = "Address is required")

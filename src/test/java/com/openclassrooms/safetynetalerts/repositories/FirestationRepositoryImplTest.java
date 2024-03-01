@@ -84,4 +84,34 @@ class FirestationRepositoryImplTest {
 
         assertThrows(NoSuchElementException.class, () -> repository.deleteFirestation(firestation));
     }
+
+    @Test
+    void getAddressesByStationNumberTest() {
+        int stationNumber = 2;
+        List<String> addresses = repository.getAddressesByStationNumber(stationNumber);
+        assertAll(() -> {
+            assertNotNull(addresses);
+            assertEquals(3, addresses.size());
+        });
+    }
+
+    @Test
+    void getFirestationByAddressTest() {
+        String address = "1509 Culver St";
+        Firestation result = repository.getFirestationByAddress(address);
+        assertAll(() -> {
+            assertNotNull(result);
+            assertEquals(address, result.getAddress());
+        });
+    }
+
+    @Test
+    void getFirestationByStationNumberTest() {
+        int stationNumber = 2;
+        Firestation result = repository.getFirestationByStationNumber(stationNumber);
+        assertAll(() -> {
+            assertNotNull(result);
+            assertEquals(stationNumber, result.getStation());
+        });
+    }
 }

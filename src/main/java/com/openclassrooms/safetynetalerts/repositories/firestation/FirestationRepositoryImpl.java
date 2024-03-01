@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
 
 @Repository
 public class FirestationRepositoryImpl implements FirestationRepository {
@@ -62,7 +61,7 @@ public class FirestationRepositoryImpl implements FirestationRepository {
         return getAllFirestation().stream()
                 .filter(firestation -> firestation.getStation() == stationNumber)
                 .map(Firestation::getAddress)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override

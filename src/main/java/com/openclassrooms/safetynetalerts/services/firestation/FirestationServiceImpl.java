@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
@@ -54,6 +53,7 @@ public class FirestationServiceImpl implements FirestationService {
         return firestationRepository.deleteFirestation(toDelete);
     }
 
+    @Override
     public PersonsCoveredByFirestation getPersonCoveredByFireStation(int stationNumber) throws JsonProcessingException {
         List<PersonDto> personsDto;
         List<String> addresses = firestationRepository.getAddressesByStationNumber(stationNumber);
@@ -62,7 +62,7 @@ public class FirestationServiceImpl implements FirestationService {
         List<Person> persons = personService.getAllPerson();
         List<Person> personsCoveredByFirestationProvided = persons.stream()
                 .filter(person -> addresses.contains(person.getAddress()))
-                .collect(Collectors.toList());
+                .toList();
 
         // Map Person to PersonDto
         String personsJson = objectMapper.writeValueAsString(personsCoveredByFirestationProvided);

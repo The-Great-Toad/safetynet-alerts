@@ -2,6 +2,7 @@ package com.openclassrooms.safetynetalerts.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.openclassrooms.safetynetalerts.TestUtils;
 import com.openclassrooms.safetynetalerts.models.MedicalRecord;
 import com.openclassrooms.safetynetalerts.models.Person;
 import com.openclassrooms.safetynetalerts.models.dto.ChildDto;
@@ -17,17 +18,14 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
-import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class PersonServiceImplTest {
+class PersonServiceImplTest extends TestUtils {
 
     @InjectMocks
     private PersonServiceImpl personService;
@@ -198,28 +196,5 @@ class PersonServiceImplTest {
         results.forEach(result -> assertEquals(phone, result));
         verify(firestationService, times(1)).getAddressesByStationNumber(stationNumber);
         verify(personRepository, times(1)).getListPersons();
-    }
-
-    private static MedicalRecord getMedicalRecord() throws ParseException {
-        MedicalRecord medicalRecord = new MedicalRecord();
-        medicalRecord.setBirthdate(getDate());
-        medicalRecord.setMedications(List.of("Med1", "Med2"));
-        medicalRecord.setAllergies(List.of("Allergy1", "Allergy2"));
-        return medicalRecord;
-    }
-
-    private static Date getDate() throws ParseException {
-        String dateString = "03/06/2010";
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        return dateFormat.parse(dateString);
-    }
-
-    private static List<Person> createPersonList() {
-        Person p1 = new Person("Erick", "Pattisson");
-        Person p2 = new Person("Sam", "Embet");
-        Person p3 = new Person("Todd", "You");
-        Person p4 = new Person("Brad", "Rie");
-
-        return asList(p1, p2, p3, p4);
     }
 }
