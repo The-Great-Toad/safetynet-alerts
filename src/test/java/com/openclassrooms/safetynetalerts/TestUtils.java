@@ -1,9 +1,9 @@
 package com.openclassrooms.safetynetalerts;
 
-import com.openclassrooms.safetynetalerts.models.Firestation;
-import com.openclassrooms.safetynetalerts.models.MedicalRecord;
-import com.openclassrooms.safetynetalerts.models.Person;
-import com.openclassrooms.safetynetalerts.models.dto.ResidentDto;
+import com.openclassrooms.safetynetalerts.domain.Firestation;
+import com.openclassrooms.safetynetalerts.domain.MedicalRecord;
+import com.openclassrooms.safetynetalerts.domain.Person;
+import com.openclassrooms.safetynetalerts.domain.dto.ResidentDto;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

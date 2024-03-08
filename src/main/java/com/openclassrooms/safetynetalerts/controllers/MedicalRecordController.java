@@ -1,6 +1,6 @@
-package com.openclassrooms.safetynetalerts.controller;
+package com.openclassrooms.safetynetalerts.controllers;
 
-import com.openclassrooms.safetynetalerts.models.MedicalRecord;
+import com.openclassrooms.safetynetalerts.domain.MedicalRecord;
 import com.openclassrooms.safetynetalerts.services.medicalrecord.MedicalRecordServiceImpl;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

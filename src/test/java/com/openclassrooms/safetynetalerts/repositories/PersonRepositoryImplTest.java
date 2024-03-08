@@ -1,7 +1,7 @@
 package com.openclassrooms.safetynetalerts.repositories;
 
-import com.openclassrooms.safetynetalerts.exceptions.PersonNotFoundException;
-import com.openclassrooms.safetynetalerts.models.Person;
+import com.openclassrooms.safetynetalerts.configuration.exceptions.PersonNotFoundException;
+import com.openclassrooms.safetynetalerts.domain.Person;
 import com.openclassrooms.safetynetalerts.repositories.person.PersonRepositoryImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

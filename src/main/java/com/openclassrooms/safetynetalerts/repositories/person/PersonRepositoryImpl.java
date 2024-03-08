@@ -1,7 +1,7 @@
 package com.openclassrooms.safetynetalerts.repositories.person;
 
-import com.openclassrooms.safetynetalerts.exceptions.PersonNotFoundException;
-import com.openclassrooms.safetynetalerts.models.Person;
+import com.openclassrooms.safetynetalerts.configuration.exceptions.PersonNotFoundException;
+import com.openclassrooms.safetynetalerts.domain.Person;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;

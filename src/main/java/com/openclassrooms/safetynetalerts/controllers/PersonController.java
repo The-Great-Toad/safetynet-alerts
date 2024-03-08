@@ -1,9 +1,9 @@
-package com.openclassrooms.safetynetalerts.controller;
+package com.openclassrooms.safetynetalerts.controllers;
 
-import com.openclassrooms.safetynetalerts.exceptions.PersonNotFoundException;
-import com.openclassrooms.safetynetalerts.models.Person;
-import com.openclassrooms.safetynetalerts.models.dto.ChildDto;
-import com.openclassrooms.safetynetalerts.models.dto.PersonInfoDto;
+import com.openclassrooms.safetynetalerts.configuration.exceptions.PersonNotFoundException;
+import com.openclassrooms.safetynetalerts.domain.Person;
+import com.openclassrooms.safetynetalerts.domain.dto.ChildDto;
+import com.openclassrooms.safetynetalerts.domain.dto.PersonInfoDto;
 import com.openclassrooms.safetynetalerts.services.person.PersonService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

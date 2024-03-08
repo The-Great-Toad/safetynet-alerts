@@ -1,6 +1,6 @@
 package com.openclassrooms.safetynetalerts.services.medicalrecord;
 
-import com.openclassrooms.safetynetalerts.models.MedicalRecord;
+import com.openclassrooms.safetynetalerts.domain.MedicalRecord;
 import com.openclassrooms.safetynetalerts.repositories.medicalrecord.MedicalRecordRepositoryImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

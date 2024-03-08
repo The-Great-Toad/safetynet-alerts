@@ -2,10 +2,10 @@ package com.openclassrooms.safetynetalerts.services.person;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.openclassrooms.safetynetalerts.models.MedicalRecord;
-import com.openclassrooms.safetynetalerts.models.Person;
-import com.openclassrooms.safetynetalerts.models.dto.ChildDto;
-import com.openclassrooms.safetynetalerts.models.dto.PersonInfoDto;
+import com.openclassrooms.safetynetalerts.domain.MedicalRecord;
+import com.openclassrooms.safetynetalerts.domain.Person;
+import com.openclassrooms.safetynetalerts.domain.dto.ChildDto;
+import com.openclassrooms.safetynetalerts.domain.dto.PersonInfoDto;
 import com.openclassrooms.safetynetalerts.repositories.person.PersonRepository;
 import com.openclassrooms.safetynetalerts.services.firestation.FirestationService;
 import com.openclassrooms.safetynetalerts.services.medicalrecord.MedicalRecordService;

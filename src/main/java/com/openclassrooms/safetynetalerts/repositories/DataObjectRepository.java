@@ -2,12 +2,11 @@ package com.openclassrooms.safetynetalerts.repositories;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.openclassrooms.safetynetalerts.models.DataObject;
+import com.openclassrooms.safetynetalerts.domain.DataObject;
 import com.openclassrooms.safetynetalerts.repositories.firestation.FirestationRepositoryImpl;
 import com.openclassrooms.safetynetalerts.repositories.medicalrecord.MedicalRecordRepositoryImpl;
 import com.openclassrooms.safetynetalerts.repositories.person.PersonRepositoryImpl;
 import jakarta.annotation.PostConstruct;
-import org.slf4j.ILoggerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

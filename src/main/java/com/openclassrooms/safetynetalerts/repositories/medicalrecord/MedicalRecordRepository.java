@@ -1,6 +1,6 @@
 package com.openclassrooms.safetynetalerts.repositories.medicalrecord;
 
-import com.openclassrooms.safetynetalerts.models.MedicalRecord;
+import com.openclassrooms.safetynetalerts.domain.MedicalRecord;
 import org.springframework.stereotype.Repository;
 
 @Repository

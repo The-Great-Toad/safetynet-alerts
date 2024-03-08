@@ -1,4 +1,4 @@
-package com.openclassrooms.safetynetalerts.models;
+package com.openclassrooms.safetynetalerts.domain;
 
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.Email;

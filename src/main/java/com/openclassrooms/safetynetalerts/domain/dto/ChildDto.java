@@ -1,6 +1,6 @@
-package com.openclassrooms.safetynetalerts.models.dto;
+package com.openclassrooms.safetynetalerts.domain.dto;
 
-import com.openclassrooms.safetynetalerts.models.Person;
+import com.openclassrooms.safetynetalerts.domain.Person;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

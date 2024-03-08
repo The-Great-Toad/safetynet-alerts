@@ -1,4 +1,4 @@
-package com.openclassrooms.safetynetalerts.models;
+package com.openclassrooms.safetynetalerts.domain;
 
 import lombok.Data;
 import org.springframework.stereotype.Component;

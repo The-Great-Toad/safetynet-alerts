@@ -1,4 +1,4 @@
-package com.openclassrooms.safetynetalerts.models.dto;
+package com.openclassrooms.safetynetalerts.domain.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

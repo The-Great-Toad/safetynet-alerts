@@ -1,6 +1,6 @@
 package com.openclassrooms.safetynetalerts.repositories.firestation;
 
-import com.openclassrooms.safetynetalerts.models.Firestation;
+import com.openclassrooms.safetynetalerts.domain.Firestation;
 import com.openclassrooms.safetynetalerts.repositories.person.PersonRepositoryImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

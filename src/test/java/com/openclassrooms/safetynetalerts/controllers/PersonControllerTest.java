@@ -1,7 +1,7 @@
-package com.openclassrooms.safetynetalerts.controller;
+package com.openclassrooms.safetynetalerts.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.openclassrooms.safetynetalerts.models.Person;
+import com.openclassrooms.safetynetalerts.domain.Person;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

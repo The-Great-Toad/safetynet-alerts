@@ -1,9 +1,9 @@
 package com.openclassrooms.safetynetalerts.services.person;
 
-import com.openclassrooms.safetynetalerts.models.MedicalRecord;
-import com.openclassrooms.safetynetalerts.models.Person;
-import com.openclassrooms.safetynetalerts.models.dto.ChildDto;
-import com.openclassrooms.safetynetalerts.models.dto.PersonInfoDto;
+import com.openclassrooms.safetynetalerts.domain.MedicalRecord;
+import com.openclassrooms.safetynetalerts.domain.Person;
+import com.openclassrooms.safetynetalerts.domain.dto.ChildDto;
+import com.openclassrooms.safetynetalerts.domain.dto.PersonInfoDto;
 
 import java.util.List;
 

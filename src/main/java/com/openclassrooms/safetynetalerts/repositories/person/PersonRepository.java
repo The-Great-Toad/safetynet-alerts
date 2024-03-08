@@ -1,6 +1,6 @@
 package com.openclassrooms.safetynetalerts.repositories.person;
 
-import com.openclassrooms.safetynetalerts.models.Person;
+import com.openclassrooms.safetynetalerts.domain.Person;
 
 import java.util.List;
 

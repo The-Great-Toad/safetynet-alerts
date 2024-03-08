@@ -1,10 +1,10 @@
 package com.openclassrooms.safetynetalerts.services.firestation;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.openclassrooms.safetynetalerts.models.Firestation;
-import com.openclassrooms.safetynetalerts.models.dto.HomeDto;
-import com.openclassrooms.safetynetalerts.models.dto.PersonsCoveredByFirestation;
-import com.openclassrooms.safetynetalerts.models.dto.ResidentAndFirestationDto;
+import com.openclassrooms.safetynetalerts.domain.Firestation;
+import com.openclassrooms.safetynetalerts.domain.dto.HomeDto;
+import com.openclassrooms.safetynetalerts.domain.dto.PersonsCoveredByFirestation;
+import com.openclassrooms.safetynetalerts.domain.dto.ResidentAndFirestationDto;
 
 import java.util.List;
 

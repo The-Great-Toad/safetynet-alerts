@@ -1,4 +1,4 @@
-package com.openclassrooms.safetynetalerts.models;
+package com.openclassrooms.safetynetalerts.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotEmpty;

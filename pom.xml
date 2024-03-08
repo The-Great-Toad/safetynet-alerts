@@ -44,12 +44,14 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<!-- SUREFIRE -->
 		<!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-surefire-report-plugin -->
 		<dependency>
 			<groupId>org.apache.maven.plugins</groupId>
 			<artifactId>maven-surefire-report-plugin</artifactId>
 			<version>3.2.3</version>
 		</dependency>
+		<!-- JACOCO -->
 		<!-- https://mvnrepository.com/artifact/org.jacoco/jacoco-maven-plugin -->
 		<dependency>
 			<groupId>org.jacoco</groupId>
@@ -84,6 +86,14 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-report-plugin</artifactId>
 				<version>3.2.3</version>
+				<executions>
+					<execution>
+						<phase>test</phase>
+						<goals>
+							<goal>report-only</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 			<!--      Jacoco      -->
 			<plugin>
@@ -92,7 +102,9 @@
 				<version>0.8.11</version>
 				<configuration>
 					<excludes>
+						<exclude>**/configuration/**</exclude>
 						<exclude>**/models/**</exclude>
+						<exclude>**/safetynetalerts/SafetynetAlertsApplication.java</exclude>
 					</excludes>
 				</configuration>
 				<executions>

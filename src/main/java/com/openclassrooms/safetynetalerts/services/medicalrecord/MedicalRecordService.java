@@ -1,6 +1,6 @@
 package com.openclassrooms.safetynetalerts.services.medicalrecord;
 
-import com.openclassrooms.safetynetalerts.models.MedicalRecord;
+import com.openclassrooms.safetynetalerts.domain.MedicalRecord;
 
 import java.util.List;
 
