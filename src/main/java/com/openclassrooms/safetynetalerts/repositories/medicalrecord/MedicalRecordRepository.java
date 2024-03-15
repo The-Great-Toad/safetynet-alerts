@@ -3,10 +3,13 @@ package com.openclassrooms.safetynetalerts.repositories.medicalrecord;
 import com.openclassrooms.safetynetalerts.domain.MedicalRecord;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface MedicalRecordRepository {
 
-    Boolean saveMedicalRecord(MedicalRecord medicalRecord);
+    List<MedicalRecord> getAllMedicalRecords();
+    MedicalRecord saveMedicalRecord(MedicalRecord medicalRecord);
 
     MedicalRecord updateMedicalRecord(MedicalRecord toUpdate);
 

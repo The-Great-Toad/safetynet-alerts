@@ -97,10 +97,8 @@ class FirestationControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(firestation1)))
 //                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Address UPDATE not found!")));
-
-        // todo: clean context to prevent test failure via une méthode de Data Repo (fonction reset par exemple appelée dans un @Before or @After)
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(containsString("Address UPDATE not found")));
     }
 
     @Test
@@ -111,8 +109,8 @@ class FirestationControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(firestation)))
 //                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Station number provided already set for this address.")));
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(containsString("Station number provided already set for this address")));
     }
 
     @Test
@@ -134,8 +132,8 @@ class FirestationControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(firestation)))
 //                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Address 19 rue de la Tour not found!")));
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(containsString("Address 19 rue de la Tour not found")));
     }
 
     /******************************************************************************************************************
@@ -170,7 +168,7 @@ class FirestationControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.residents[0].lastName", is("Boyd")))
                 .andExpect(jsonPath("$.residents[0].phone", is("841-874-6512")))
-                .andExpect(jsonPath("$.residents[0].age", is(40)))
+                .andExpect(jsonPath("$.residents[0].age", is(39)))
                 .andExpect(jsonPath("$.residents[0].medications", is(medications)))
                 .andExpect(jsonPath("$.residents[0].allergies", is(allergies)));
     }

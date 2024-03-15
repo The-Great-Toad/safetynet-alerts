@@ -3,9 +3,10 @@ package com.openclassrooms.safetynetalerts.repositories;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.openclassrooms.safetynetalerts.domain.DataObject;
-import com.openclassrooms.safetynetalerts.repositories.firestation.FirestationRepositoryImpl;
-import com.openclassrooms.safetynetalerts.repositories.medicalrecord.MedicalRecordRepositoryImpl;
-import com.openclassrooms.safetynetalerts.repositories.person.PersonRepositoryImpl;
+import com.openclassrooms.safetynetalerts.domain.Firestation;
+import com.openclassrooms.safetynetalerts.domain.MedicalRecord;
+import com.openclassrooms.safetynetalerts.domain.Person;
+import com.openclassrooms.safetynetalerts.repositories.person.PersonRepository;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +16,8 @@ import org.springframework.stereotype.Repository;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.List;
 
 @Repository
 public class DataObjectRepository {
@@ -27,24 +30,42 @@ public class DataObjectRepository {
     @Value("${spring.filepath.data}")
     private String filePath;
 
-    private static DataObject data = new DataObject();
+    @Autowired
+    private PersonRepository personRepository;
+
+    private List<Person> people;
+    private List<Firestation> firestations;
+
+    private List<MedicalRecord> medicalRecords;
+
+    public List<Person> getPeople() {
+        return people;
+    }
+
+    public List<Firestation> getFirestations() {
+        return firestations;
+    }
+
+    public List<MedicalRecord> getMedicalRecords() {
+        return medicalRecords;
+    }
 
     @PostConstruct
     private void initProjectData() {
+        mapper.setDateFormat(new SimpleDateFormat("dd/MM/yyyy"));
+        DataObject data;
         try {
             data = mapper.readValue(new File(filePath), new TypeReference<>() {});
-            logger.info("[DataObjectRepository] - Data initialisation completed");
+            logger.debug("[DataObjectRepository] - Data initialisation completed");
         } catch (IOException e) {
+            logger.error("[DataObjectRepository] - ERROR: {}",e.getMessage());
             throw new RuntimeException(e.getMessage());
         }
 
-        resetRepositoriesList();
-        logger.info("[DataObjectRepository] - All Repositories lists initialisation completed");
-    }
+        people = data.getPersons();
+        medicalRecords = data.getMedicalrecords();
+        firestations = data.getFirestations();
 
-    public static void resetRepositoriesList() {
-        PersonRepositoryImpl.people = data.getPersons();
-        FirestationRepositoryImpl.firestations = data.getFirestations();
-        MedicalRecordRepositoryImpl.medicalRecords = data.getMedicalrecords();
+        logger.debug("[DataObjectRepository] - All Repositories lists initialisation completed");
     }
 }

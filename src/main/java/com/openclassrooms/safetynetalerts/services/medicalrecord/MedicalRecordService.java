@@ -8,7 +8,7 @@ public interface MedicalRecordService {
 
     List<MedicalRecord> getAllMedicalRecords();
 
-    Boolean saveMedicalRecord(MedicalRecord medicalRecord);
+    MedicalRecord saveMedicalRecord(MedicalRecord medicalRecord);
 
     MedicalRecord updateMedicalRecord(MedicalRecord toUpdate);
 

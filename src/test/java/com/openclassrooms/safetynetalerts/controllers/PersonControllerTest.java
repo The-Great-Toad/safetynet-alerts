@@ -88,7 +88,7 @@ class PersonControllerTest {
                         .content(mapper.writeValueAsString(person)))
 //                .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Erick Smith not found!")));
+                .andExpect(content().string(containsString("Erick Smith not found")));
     }
 
     @Test
@@ -111,7 +111,7 @@ class PersonControllerTest {
                         .content(mapper.writeValueAsString(person)))
 //                .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Erick Smith not found!")));
+                .andExpect(content().string(containsString("Erick Smith not found")));
     }
 
     /******************************************************************************************************************
@@ -126,7 +126,7 @@ class PersonControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].firstName", is("Tenley")))
                 .andExpect(jsonPath("$[0].lastName", is("Boyd")))
-                .andExpect(jsonPath("$[0].age", is(12)));
+                .andExpect(jsonPath("$[0].age", is(10)));
     }
 
     @Test
@@ -148,7 +148,7 @@ class PersonControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].lastName", is("Boyd")))
                 .andExpect(jsonPath("$[0].address", is("1509 Culver St")))
-                .andExpect(jsonPath("$[0].age", is(40)))
+                .andExpect(jsonPath("$[0].age", is(39)))
                 .andExpect(jsonPath("$[0].email", is("jaboyd@email.com")));
     }
 

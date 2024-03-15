@@ -15,7 +15,7 @@ public interface FirestationRepository {
 
     List<String> getAddressesByStationNumber(int stationNumber);
 
-    Firestation getFirestationByAddress(String address);
+    List<Firestation> getFirestationByAddress(String address);
 
-    Firestation getFirestationByStationNumber(Integer station);
+    List<Firestation> getFirestationByStationNumber(Integer station);
 }

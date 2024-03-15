@@ -96,9 +96,17 @@ class FirestationRepositoryImplTest {
     }
 
     @Test
+    void getAddressesByStationNumberTest_LoggingIncorrectStationNumberProvided() {
+        int stationNumber = 99;
+        List<String> addresses = repository.getAddressesByStationNumber(stationNumber);
+
+        assertEquals(0, addresses.size());
+    }
+
+    @Test
     void getFirestationByAddressTest() {
         String address = "1509 Culver St";
-        Firestation result = repository.getFirestationByAddress(address);
+        Firestation result = repository.getFirestationByAddress(address).get(0);
         assertAll(() -> {
             assertNotNull(result);
             assertEquals(address, result.getAddress());
@@ -106,12 +114,28 @@ class FirestationRepositoryImplTest {
     }
 
     @Test
+    void getFirestationByAddressTest_LoggingIncorrectAddressProvided() {
+        String address = "Not Found";
+        List<Firestation> result = repository.getFirestationByAddress(address);
+
+        assertEquals(0, result.size());
+    }
+
+    @Test
     void getFirestationByStationNumberTest() {
         int stationNumber = 2;
-        Firestation result = repository.getFirestationByStationNumber(stationNumber);
+        List<Firestation> result = repository.getFirestationByStationNumber(stationNumber);
         assertAll(() -> {
             assertNotNull(result);
-            assertEquals(stationNumber, result.getStation());
+            assertEquals(stationNumber, result.get(0).getStation());
         });
+    }
+
+    @Test
+    void getFirestationByStationNumberTest_LoggingIncorrectStationNumberProvided() {
+        int stationNumber = 99;
+        List<Firestation> result = repository.getFirestationByStationNumber(stationNumber);
+
+        assertEquals(0, result.size());
     }
 }

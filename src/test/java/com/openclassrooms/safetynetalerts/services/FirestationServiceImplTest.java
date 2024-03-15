@@ -132,7 +132,7 @@ class FirestationServiceImplTest extends TestUtils {
     @Test
     void getResidentAndFireStationDtoTest() throws ParseException, JsonProcessingException {
         String address = "";
-        Firestation firestation = new Firestation(address, 2);
+        List<Firestation> firestation = List.of(new Firestation(address, 2));
         when(firestationRepository.getFirestationByAddress(anyString())).thenReturn(firestation);
 
         when(personService.getPersonsByAddress(anyString())).thenReturn(List.of(createPerson()));
@@ -162,7 +162,7 @@ class FirestationServiceImplTest extends TestUtils {
     @Test
     void getHomeServedByStationsTest() throws ParseException, JsonProcessingException {
         List<Integer> stations = List.of(2);
-        Firestation firestation = createFireStation();
+        List<Firestation> firestation = List.of(createFireStation());
         when(firestationRepository.getFirestationByStationNumber(anyInt())).thenReturn(firestation);
 
         String address = "123 test";

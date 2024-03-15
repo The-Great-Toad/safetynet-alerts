@@ -1,7 +1,7 @@
 package com.openclassrooms.safetynetalerts.services.medicalrecord;
 
 import com.openclassrooms.safetynetalerts.domain.MedicalRecord;
-import com.openclassrooms.safetynetalerts.repositories.medicalrecord.MedicalRecordRepositoryImpl;
+import com.openclassrooms.safetynetalerts.repositories.medicalrecord.MedicalRecordRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,14 +11,14 @@ import java.util.List;
 public class MedicalRecordServiceImpl implements MedicalRecordService {
 
     @Autowired
-    private MedicalRecordRepositoryImpl medicalRecordRepository;
+    private MedicalRecordRepository medicalRecordRepository;
 
     public List<MedicalRecord> getAllMedicalRecords() {
         return medicalRecordRepository.getAllMedicalRecords();
     }
 
     @Override
-    public Boolean saveMedicalRecord(MedicalRecord medicalRecord) {
+    public MedicalRecord saveMedicalRecord(MedicalRecord medicalRecord) {
         return medicalRecordRepository.saveMedicalRecord(medicalRecord);
     }
 

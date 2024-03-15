@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import static java.util.Arrays.asList;
 
@@ -24,7 +25,10 @@ public class TestUtils {
     }
 
     public static Date getDate() throws ParseException {
-        String dateString = "03/06/2010";
+        return getDate(null);
+    }
+    public static Date getDate(String date) throws ParseException {
+        String dateString = Objects.nonNull(date) ? date : "03/06/2010";
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         return dateFormat.parse(dateString);
     }
@@ -52,6 +56,16 @@ public class TestUtils {
                 .age(15)
                 .medications(new ArrayList<>())
                 .allergies(new ArrayList<>())
+                .build();
+    }
+
+    protected static MedicalRecord createMedicalRecord() throws ParseException {
+        return MedicalRecord.builder()
+                .firstName("Bob")
+                .lastName("Sponge")
+                .birthdate(getDate("03/06/1984"))
+                .medications(List.of("aznol:350mg","hydrapermazol:100mg"))
+                .allergies(List.of("nillacilan"))
                 .build();
     }
 
