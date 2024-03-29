@@ -14,8 +14,8 @@ public class AppInfo implements InfoContributor {
     public void contribute(Info.Builder builder) {
         Map<String, Object> details = new HashMap<>();
         details.put("name","SafetyNet Alerts");
-        details.put("description","Le but de cet application est d'envoyer des informations aux systèmes de services d'urgence.");
-        details.put("version","v1.0.0");
+        details.put("description","Le but de cet application est d'envoyer des informations aux systèmes de services d'urgences.");
+        details.put("version","v1.0");
         builder.withDetails(details);
     }
 }

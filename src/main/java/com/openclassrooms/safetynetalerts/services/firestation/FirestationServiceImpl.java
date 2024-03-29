@@ -22,7 +22,7 @@ import java.util.stream.Stream;
 public class FirestationServiceImpl implements FirestationService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FirestationService.class);
-    private final String loggerName = "[FirestationService]";
+    private final String LOG_ID = "[FirestationService]";
 
     @Autowired
     private FirestationRepository firestationRepository;
@@ -124,7 +124,7 @@ public class FirestationServiceImpl implements FirestationService {
 
             return new ResidentAndFirestationDto(residents, firestation.getStation());
         } else {
-            final String error = String.format("%s - ERROR - No fire station match found for provided address: %s", loggerName, address);
+            final String error = String.format("%s - ERROR - No fire station match found for provided address: %s", LOG_ID, address);
             throw new NoSuchElementException(error);
         }
     }
@@ -161,7 +161,7 @@ public class FirestationServiceImpl implements FirestationService {
                             residents.put(address, new ArrayList<>(List.of(residentDto)));
                         }
                     } catch (JsonProcessingException e) {
-                        final String error = String.format("%s - ERROR - Parsing error encounter with personString: %s", loggerName, e.getMessage());
+                        final String error = String.format("%s - ERROR - Parsing error encounter with personString: %s", LOG_ID, e.getMessage());
                         LOGGER.error(error);
                     }
                 });

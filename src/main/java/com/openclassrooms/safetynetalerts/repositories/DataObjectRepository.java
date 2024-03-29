@@ -6,32 +6,30 @@ import com.openclassrooms.safetynetalerts.domain.DataObject;
 import com.openclassrooms.safetynetalerts.domain.Firestation;
 import com.openclassrooms.safetynetalerts.domain.MedicalRecord;
 import com.openclassrooms.safetynetalerts.domain.Person;
-import com.openclassrooms.safetynetalerts.repositories.person.PersonRepository;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
-@Repository
+@Component
 public class DataObjectRepository {
 
     private static final Logger logger = LoggerFactory.getLogger(DataObjectRepository.class);
+    private final String LOG_ID = "[DataObjectRepository]";
+
 
     @Autowired
     private ObjectMapper mapper;
 
     @Value("${spring.filepath.data}")
     private String filePath;
-
-    @Autowired
-    private PersonRepository personRepository;
 
     private List<Person> people;
     private List<Firestation> firestations;
@@ -56,9 +54,9 @@ public class DataObjectRepository {
         DataObject data;
         try {
             data = mapper.readValue(new File(filePath), new TypeReference<>() {});
-            logger.debug("[DataObjectRepository] - Data initialisation completed");
+            logger.debug("{} - Data initialisation completed", LOG_ID);
         } catch (IOException e) {
-            logger.error("[DataObjectRepository] - ERROR: {}",e.getMessage());
+            logger.error("{} - ERROR: {}", LOG_ID, e.getMessage());
             throw new RuntimeException(e.getMessage());
         }
 
@@ -66,6 +64,6 @@ public class DataObjectRepository {
         medicalRecords = data.getMedicalrecords();
         firestations = data.getFirestations();
 
-        logger.debug("[DataObjectRepository] - All Repositories lists initialisation completed");
+        logger.debug("{} - Repositories lists initialisation completed", LOG_ID);
     }
 }

@@ -9,12 +9,17 @@ import com.openclassrooms.safetynetalerts.domain.dto.*;
 import com.openclassrooms.safetynetalerts.services.firestation.FirestationService;
 import com.openclassrooms.safetynetalerts.services.medicalrecord.MedicalRecordService;
 import com.openclassrooms.safetynetalerts.services.person.PersonService;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
 import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.util.Strings;
+import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 
 import java.util.List;
 
@@ -30,12 +35,21 @@ public class SafetynetAlertsApplication implements CommandLineRunner {
 	@Autowired
 	private MedicalRecordService medicalRecordService;
 
-	@Autowired
-	private ObjectMapper mapper;
-
 	public static void main(String[] args) {
 		SpringApplication.run(SafetynetAlertsApplication.class, args);
 	}
+
+//	@Bean
+//	public GroupedOpenApi safetyNetGroup(@Value("${springdoc.api-docs.version}") String appVersion) {
+//		return GroupedOpenApi.builder().group("users")
+//				.addOperationCustomizer((operation, handlerMethod) -> {
+//					operation.addSecurityItem(new SecurityRequirement().addList("basicScheme"));
+//					return operation;
+//				})
+//				.addOpenApiCustomizer(openApi -> openApi.info(new Info().title("SafetyNet Alert API").version(appVersion)))
+//				.packagesToScan("org.springdoc.demo.app2")
+//				.build();
+//	}
 
 	@Override
 	public void run(String... args) throws JsonProcessingException {

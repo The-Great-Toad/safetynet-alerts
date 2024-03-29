@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.Objects;
 
 @Component
 public class RequestResponseLoggingFilter implements Filter {
@@ -23,7 +24,8 @@ public class RequestResponseLoggingFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
 
-        logger.info("Logging Request  {} : {}", request.getMethod(), request.getRequestURI());
+        logger.info("Logging Request  {} : {} {}", request.getMethod(), request.getRequestURI(),
+                Objects.nonNull(request.getQueryString()) ? request.getQueryString() : "");
 
         filterChain.doFilter(servletRequest, servletResponse);
 
