@@ -5,10 +5,9 @@ import com.openclassrooms.safetynetalerts.domain.MedicalRecord;
 import com.openclassrooms.safetynetalerts.domain.Person;
 import com.openclassrooms.safetynetalerts.domain.dto.ResidentDto;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -16,7 +15,7 @@ import static java.util.Arrays.asList;
 
 public class TestUtils {
 
-    public static MedicalRecord getMedicalRecord() throws ParseException {
+    public static MedicalRecord getMedicalRecord() {
         MedicalRecord medicalRecord = new MedicalRecord();
         medicalRecord.setBirthdate(getDate());
         medicalRecord.setMedications(List.of("Med1", "Med2"));
@@ -24,13 +23,13 @@ public class TestUtils {
         return medicalRecord;
     }
 
-    public static Date getDate() throws ParseException {
+    public static LocalDate getDate() {
         return getDate(null);
     }
-    public static Date getDate(String date) throws ParseException {
+    public static LocalDate getDate(String date) {
         String dateString = Objects.nonNull(date) ? date : "03/06/2010";
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        return dateFormat.parse(dateString);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+        return LocalDate.parse(dateString, formatter);
     }
 
     public static List<Person> createPersonList() {
@@ -46,6 +45,11 @@ public class TestUtils {
         return Person.builder()
                 .firstName("Bob")
                 .lastName("Sponge")
+                .address("3 rue")
+                .city("Santa City")
+                .zip("12345")
+                .phone("0692358472")
+                .email("my-email@mail.com")
                 .build();
     }
 
@@ -59,7 +63,7 @@ public class TestUtils {
                 .build();
     }
 
-    protected static MedicalRecord createMedicalRecord() throws ParseException {
+    protected static MedicalRecord createMedicalRecord() {
         return MedicalRecord.builder()
                 .firstName("Bob")
                 .lastName("Sponge")

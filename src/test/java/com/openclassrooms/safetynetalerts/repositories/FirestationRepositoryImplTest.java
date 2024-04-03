@@ -17,8 +17,6 @@ class FirestationRepositoryImplTest {
     @Autowired
     private FirestationRepositoryImpl repository;
 
-    // TODO: 24/02/2024 Test all methods
-
     @Test
     void getAllFirestationTest() {
         List<Firestation> firestations = repository.getAllFirestation();
@@ -50,15 +48,6 @@ class FirestationRepositoryImplTest {
         Firestation result = repository.updateFirestation(firestation);
 
         assertEquals(firestation, result);
-    }
-
-    @Test
-    void updateFiresationTest_IllegalArgumentException() {
-        Firestation firestation = new Firestation("test update", 1);
-        repository.saveFiresation(firestation);
-        firestation.setStation(2);
-
-        assertThrows(IllegalArgumentException.class, () -> repository.updateFirestation(firestation));
     }
 
     @Test
@@ -96,11 +85,10 @@ class FirestationRepositoryImplTest {
     }
 
     @Test
-    void getAddressesByStationNumberTest_LoggingIncorrectStationNumberProvided() {
+    void getAddressesByStationNumberTest_NoSuchElementException() {
         int stationNumber = 99;
-        List<String> addresses = repository.getAddressesByStationNumber(stationNumber);
 
-        assertEquals(0, addresses.size());
+        assertThrows(NoSuchElementException.class, () -> repository.getAddressesByStationNumber(stationNumber));
     }
 
     @Test
@@ -114,11 +102,10 @@ class FirestationRepositoryImplTest {
     }
 
     @Test
-    void getFirestationByAddressTest_LoggingIncorrectAddressProvided() {
+    void getFirestationByAddressTest_NoSuchElementException() {
         String address = "Not Found";
-        List<Firestation> result = repository.getFirestationByAddress(address);
 
-        assertEquals(0, result.size());
+        assertThrows(NoSuchElementException.class, () -> repository.getFirestationByAddress(address));
     }
 
     @Test
@@ -132,10 +119,9 @@ class FirestationRepositoryImplTest {
     }
 
     @Test
-    void getFirestationByStationNumberTest_LoggingIncorrectStationNumberProvided() {
+    void getFirestationByStationNumberTest_NoSuchElementException() {
         int stationNumber = 99;
-        List<Firestation> result = repository.getFirestationByStationNumber(stationNumber);
 
-        assertEquals(0, result.size());
+        assertThrows(NoSuchElementException.class, () -> repository.getAddressesByStationNumber(stationNumber));
     }
 }

@@ -104,29 +104,24 @@ public class FirestationServiceImpl implements FirestationService {
         List<Firestation> firestationList = firestationRepository.getFirestationByAddress(address);
 
         if (!firestationList.isEmpty()) {
+
             Firestation firestation = firestationList.get(0);
             List<Person> persons = personService.getPersonsByAddress(address);
 
-            List<ResidentDto> residents = persons.stream().map(person -> {
-                MedicalRecord md = medicalRecordService.getMedicalRecordByFirstAndLastName(person.getFirstName(), person.getLastName());
-                int age = personService.calculateAge(md);
+            List<ResidentDto> residents = new ArrayList<>();
+            
+            persons.forEach(person -> {
                 try {
-                    String personString = objectMapper.writeValueAsString(person);
-                    ResidentDto residentDto = objectMapper.readValue(personString, ResidentDto.class);
-                    residentDto.setAge(age);
-                    residentDto.setMedications(md.getMedications());
-                    residentDto.setAllergies(md.getAllergies());
-                    return residentDto;
+                    residents.add(mapPersonToResidentDto(person));
+                    
                 } catch (JsonProcessingException e) {
-                    throw new RuntimeException(e);
+                    LOGGER.error("{} - ERROR - Parsing error encounter with personString: {}", LOG_ID, e.getMessage());
                 }
-            }).toList();
+            });
 
             return new ResidentAndFirestationDto(residents, firestation.getStation());
-        } else {
-            final String error = String.format("%s - ERROR - No fire station match found for provided address: %s", LOG_ID, address);
-            throw new NoSuchElementException(error);
         }
+        return new ResidentAndFirestationDto();
     }
 
     @Override
@@ -134,29 +129,22 @@ public class FirestationServiceImpl implements FirestationService {
         Map<String, List<ResidentDto>> residents = new HashMap<>();
 
         stations.forEach(station -> {
-            // Récupérer l'adresse de la station
+
             List<Firestation> firestationList = firestationRepository.getFirestationByStationNumber(station);
+
             if (!firestationList.isEmpty()) {
+
                 Firestation firestation = firestationList.get(0);
-                // Récupérer les personnes by adresse
                 List<Person> persons = personService.getPersonsByAddress(firestation.getAddress());
 
                 persons.forEach(person -> {
                     try {
-                        // récupérer le dossier médicale
-                        MedicalRecord medicalRecord = medicalRecordService.getMedicalRecordByFirstAndLastName(person.getFirstName(), person.getLastName());
-                        // Calculer l'age
-                        int age = personService.calculateAge(medicalRecord);
-                        // Convertir les personnes récupérées en ResidentDto
-                        String personString = objectMapper.writeValueAsString(person);
-                        ResidentDto residentDto = objectMapper.readValue(personString, ResidentDto.class);
-                        residentDto.setAge(age);
-                        residentDto.setMedications(medicalRecord.getMedications());
-                        residentDto.setAllergies(medicalRecord.getAllergies());
-                        // Ajouter à la Map
+                        ResidentDto residentDto = mapPersonToResidentDto(person);
                         String address = person.getAddress();
+
                         if (residents.containsKey(address)) {
                             residents.get(address).add(residentDto);
+
                         } else {
                             residents.put(address, new ArrayList<>(List.of(residentDto)));
                         }
@@ -168,5 +156,19 @@ public class FirestationServiceImpl implements FirestationService {
             }
         });
         return new HomeDto(residents);
+    }
+
+    private ResidentDto mapPersonToResidentDto(Person person) throws JsonProcessingException {
+        MedicalRecord md = medicalRecordService.getMedicalRecordByFirstAndLastName(person.getFirstName(), person.getLastName());
+        int age = personService.calculateAge(md);
+
+        String personString = objectMapper.writeValueAsString(person);
+        ResidentDto residentDto = objectMapper.readValue(personString, ResidentDto.class);
+
+        residentDto.setAge(age);
+        residentDto.setMedications(md.getMedications());
+        residentDto.setAllergies(md.getAllergies());
+
+        return residentDto;
     }
 }

@@ -29,8 +29,8 @@ public class FirestationRepositoryImpl implements FirestationRepository {
         List<Firestation> firestations = getAllFirestation();
 
         if (firestations.contains(firestation)) {
-            final String error = String.format("%s - ERROR - Fire station already in the list: %s", loggingNameRef, firestation);
-            logger.error(error);
+            final String error = String.format("Fire station already in the list: %s", firestation);
+            logger.error("{} - {}", loggingNameRef, error);
             throw new IllegalArgumentException(error);
         }
 
@@ -43,18 +43,13 @@ public class FirestationRepositoryImpl implements FirestationRepository {
 
         for (Firestation currentStation: firestations) {
             if (currentStation.getAddress().equals(toUpdate.getAddress())) {
-                if (currentStation.getStation() != toUpdate.getStation()) {
-                    currentStation.setStation(toUpdate.getStation());
-                    logger.debug("{} - Station number updated from {} to {}", loggingNameRef, currentStation.getStation(), toUpdate.getStation());
-                    return toUpdate;
-                }
-                final String error = String.format("%s - ERROR - Station number provided already set for this address: %s", loggingNameRef, toUpdate);
-                logger.error(error);
-                throw new IllegalArgumentException(error);
+                currentStation.setStation(toUpdate.getStation());
+                logger.debug("{} - Station number updated from {} to {}", loggingNameRef, currentStation.getStation(), toUpdate.getStation());
+                return toUpdate;
             }
         }
-        final String error = String.format("%s - ERROR - Address %s not found", loggingNameRef, toUpdate.getAddress());
-        logger.error(error);
+        final String error = String.format("Address %s not found", toUpdate.getAddress());
+        logger.error("{} - {} - {}", loggingNameRef, error, toUpdate);
         throw new NoSuchElementException(error);
     }
 
@@ -66,8 +61,8 @@ public class FirestationRepositoryImpl implements FirestationRepository {
             logger.debug("{} - Deleting {}", loggingNameRef, toDelete);
             return firestations.remove(toDelete);
         }
-        final String error = String.format("%s - ERROR - Address %s not found", loggingNameRef, toDelete.getAddress());
-        logger.error(error);
+        final String error = String.format("Address %s not found", toDelete.getAddress());
+        logger.error("{} - {} - {}", loggingNameRef, error, toDelete);
         throw new NoSuchElementException(error);
     }
 
@@ -79,7 +74,9 @@ public class FirestationRepositoryImpl implements FirestationRepository {
                 .toList();
 
         if (result.isEmpty()) {
-            logger.debug("{} - No address found for station number: {}", loggingNameRef, stationNumber);
+            final String error = String.format("Station number not found: %s", stationNumber);
+            logger.error("{} - {}", loggingNameRef, error);
+            throw new NoSuchElementException(error);
         }
         return result;
     }
@@ -91,7 +88,9 @@ public class FirestationRepositoryImpl implements FirestationRepository {
                 .toList();
 
         if (result.isEmpty()) {
-            logger.debug("{} - No match found for address: {}", loggingNameRef, address);
+            final String error = String.format("No match found for address: %s", address);
+            logger.error("{} - {}", loggingNameRef, error);
+            throw new NoSuchElementException(error);
         }
         return result;
     }
@@ -103,7 +102,9 @@ public class FirestationRepositoryImpl implements FirestationRepository {
                 .toList();
 
         if (result.isEmpty()) {
-            logger.debug("{} - No match found for station number: {}", loggingNameRef, station);
+            final String error = String.format("Fire station not found. Invalid station number: %s", station);
+            logger.error("{} - {}", loggingNameRef, error);
+            throw new NoSuchElementException(error);
         }
         return result;
     }

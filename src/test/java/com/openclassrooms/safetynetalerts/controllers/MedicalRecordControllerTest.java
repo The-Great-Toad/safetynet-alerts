@@ -3,6 +3,7 @@ package com.openclassrooms.safetynetalerts.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.openclassrooms.safetynetalerts.TestUtils;
 import com.openclassrooms.safetynetalerts.domain.MedicalRecord;
+import com.openclassrooms.safetynetalerts.services.medicalrecord.MedicalRecordService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -10,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -26,16 +28,22 @@ class MedicalRecordControllerTest extends TestUtils {
     @Autowired
     private ObjectMapper mapper;
 
+    @Autowired
+    private MedicalRecordService medicalRecordService;
+
     @Test
     void getAllMedicalRecordsTest() throws Exception {
+        List<MedicalRecord> medicalRecords = medicalRecordService.getAllMedicalRecords();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+
         mockMvc.perform(get("/medicalRecord"))
 //                .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].firstName", is("John")))
-                .andExpect(jsonPath("$[0].lastName", is("Boyd")))
-                .andExpect(jsonPath("$[0].birthdate", is("03/06/1984")))
-                .andExpect(jsonPath("$[0].medications[0]", is("aznol:350mg")))
-                .andExpect(jsonPath("$[0].allergies[0]", is("nillacilan")));
+                .andExpect(jsonPath("$[0].firstName", is(medicalRecords.get(0).getFirstName())))
+                .andExpect(jsonPath("$[0].lastName", is(medicalRecords.get(0).getLastName())))
+                .andExpect(jsonPath("$[0].birthdate", is(medicalRecords.get(0).getBirthdate().format(formatter))))
+                .andExpect(jsonPath("$[0].medications", is(medicalRecords.get(0).getMedications())))
+                .andExpect(jsonPath("$[0].allergies", is(medicalRecords.get(0).getAllergies())));
     }
 
     @Test

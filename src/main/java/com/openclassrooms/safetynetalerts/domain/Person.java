@@ -21,11 +21,13 @@ public class Person {
     @NotBlank(message = "Last name is required")
     private String lastName;
 
+    @NotBlank(message = "Address is required")
     private String address;
 
+    @NotBlank(message = "City is required")
     private String city;
 
-    @Digits(integer = 4, fraction = 0, message = "Zip is invalid")
+    @Digits(integer = 5, fraction = 0, message = "Zip is invalid")
     private String zip;
 
     @Digits(integer = 12, fraction = 0, message = "Phone is invalid")

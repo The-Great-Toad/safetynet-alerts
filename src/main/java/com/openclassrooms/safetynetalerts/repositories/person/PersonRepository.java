@@ -8,7 +8,7 @@ public interface PersonRepository {
 
     List<Person> getListPersons();
 
-    boolean savePerson(Person p);
+    Person savePerson(Person p);
 
     Person updatePerson(Person updatedPerson);
 

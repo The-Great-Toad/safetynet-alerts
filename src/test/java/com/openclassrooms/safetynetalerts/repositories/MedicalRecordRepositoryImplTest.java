@@ -1,12 +1,12 @@
-package com.openclassrooms.safetynetalerts.repositories.medicalrecord;
+package com.openclassrooms.safetynetalerts.repositories;
 
 import com.openclassrooms.safetynetalerts.TestUtils;
 import com.openclassrooms.safetynetalerts.domain.MedicalRecord;
+import com.openclassrooms.safetynetalerts.repositories.medicalrecord.MedicalRecordRepositoryImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.text.ParseException;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -27,7 +27,7 @@ class MedicalRecordRepositoryImplTest extends TestUtils {
     }
 
     @Test
-    void saveMedicalRecordTest_success() throws ParseException {
+    void saveMedicalRecordTest_success() {
         MedicalRecord medicalRecord = createMedicalRecord();
         MedicalRecord result = repository.saveMedicalRecord(medicalRecord);
 
@@ -35,7 +35,7 @@ class MedicalRecordRepositoryImplTest extends TestUtils {
     }
 
     @Test
-    void saveMedicalRecordTest_IllegalArgumentException() throws ParseException {
+    void saveMedicalRecordTest_IllegalArgumentException() {
         MedicalRecord medicalRecord = createMedicalRecord();
         medicalRecord.setLastName("SAVE - already in list");
         repository.saveMedicalRecord(medicalRecord);
@@ -43,7 +43,7 @@ class MedicalRecordRepositoryImplTest extends TestUtils {
         assertThrows(IllegalArgumentException.class, () -> repository.saveMedicalRecord(medicalRecord));
     }
     @Test
-    void updateMedicalRecordTest_success() throws ParseException {
+    void updateMedicalRecordTest_success() {
         MedicalRecord medicalRecord = createMedicalRecord();
         medicalRecord.setLastName("UPDATE");
         repository.saveMedicalRecord(medicalRecord);
@@ -56,7 +56,7 @@ class MedicalRecordRepositoryImplTest extends TestUtils {
     }
 
     @Test
-    void updateMedicalRecordTest_NoSuchElementException() throws ParseException {
+    void updateMedicalRecordTest_NoSuchElementException() {
         MedicalRecord medicalRecord = createMedicalRecord();
         medicalRecord.setLastName("UPDATE failed");
 
@@ -65,7 +65,7 @@ class MedicalRecordRepositoryImplTest extends TestUtils {
     }
 
     @Test
-    void deleteMedicalRecordTest_success() throws ParseException {
+    void deleteMedicalRecordTest_success() {
         MedicalRecord medicalRecord = createMedicalRecord();
         medicalRecord.setLastName("DELETE");
         repository.saveMedicalRecord(medicalRecord);
@@ -77,7 +77,7 @@ class MedicalRecordRepositoryImplTest extends TestUtils {
     }
 
     @Test
-    void deleteMedicalRecordTest_NoSuchElementException() throws ParseException {
+    void deleteMedicalRecordTest_NoSuchElementException() {
         MedicalRecord medicalRecord = getMedicalRecord();
 
         assertThrows(NoSuchElementException.class, () -> repository.deleteMedicalRecord(medicalRecord));

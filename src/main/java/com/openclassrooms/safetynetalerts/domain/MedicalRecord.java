@@ -1,5 +1,8 @@
 package com.openclassrooms.safetynetalerts.domain;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.openclassrooms.safetynetalerts.configuration.CustomLocalDateConfig;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Past;
 import lombok.AllArgsConstructor;
@@ -7,7 +10,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @Data
@@ -23,7 +26,9 @@ public class MedicalRecord {
     private String lastName;
 
     @Past(message = "Date of birth must be a past date")
-    private Date birthdate;
+    @JsonDeserialize(using = CustomLocalDateConfig.CustomLocalDateDeserializer.class)
+    @JsonSerialize(using = CustomLocalDateConfig.LocalDateSerializer.class)
+    private LocalDate birthdate;
 
     private List<String> medications;
 

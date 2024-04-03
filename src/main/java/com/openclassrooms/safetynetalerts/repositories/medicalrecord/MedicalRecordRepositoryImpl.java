@@ -1,6 +1,5 @@
 package com.openclassrooms.safetynetalerts.repositories.medicalrecord;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.openclassrooms.safetynetalerts.domain.MedicalRecord;
 import com.openclassrooms.safetynetalerts.repositories.DataObjectRepository;
 import org.slf4j.Logger;
@@ -21,9 +20,6 @@ public class MedicalRecordRepositoryImpl implements MedicalRecordRepository {
     @Autowired
     private DataObjectRepository dataObjectRepository;
 
-    @Autowired
-    private ObjectMapper mapper;
-
     public List<MedicalRecord> getAllMedicalRecords() {
         return dataObjectRepository.getMedicalRecords();
     }
@@ -38,8 +34,8 @@ public class MedicalRecordRepositoryImpl implements MedicalRecordRepository {
             medicalRecords.add(medicalRecord);
             return medicalRecord;
         }
-        final String error = String.format("%s - %s's medical record already in the list", loggingNameRef, fullname);
-        logger.error(error);
+        final String error = String.format("%s's medical record already in the list", fullname);
+        logger.error("{} - {} - {}", loggingNameRef, error, medicalRecord);
         throw new IllegalArgumentException(error);
     }
 
@@ -57,8 +53,8 @@ public class MedicalRecordRepositoryImpl implements MedicalRecordRepository {
                 return medicalRecords.get(index);
             }
         }
-        final String error = String.format("%s - %s's medical record not found", loggingNameRef, fullname);
-        logger.error(error);
+        final String error = String.format("%s's medical record not found", fullname);
+        logger.error("{} - {} - {}", loggingNameRef, error, toUpdate);
         throw new NoSuchElementException(error);
     }
 
@@ -75,8 +71,8 @@ public class MedicalRecordRepositoryImpl implements MedicalRecordRepository {
             }
             index++;
         }
-        final String error = String.format("%s - %s's medical record not found!", loggingNameRef, fullname);
-        logger.error(error);
+        final String error = String.format("%s's medical record not found!", fullname);
+        logger.error("{} - {} - {}", loggingNameRef, error, toDelete);
         throw new NoSuchElementException(error);
     }
 }

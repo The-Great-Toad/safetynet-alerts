@@ -1,6 +1,5 @@
 package com.openclassrooms.safetynetalerts.repositories;
 
-import com.openclassrooms.safetynetalerts.configuration.exceptions.PersonNotFoundException;
 import com.openclassrooms.safetynetalerts.domain.Person;
 import com.openclassrooms.safetynetalerts.repositories.person.PersonRepositoryImpl;
 import org.junit.jupiter.api.Test;
@@ -8,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -29,9 +29,9 @@ class PersonRepositoryImplTest {
     void savePersonTest_success() {
         Person newPerson = new Person("Test", "To be save");
 
-        boolean result = repository.savePerson(newPerson);
+        Person result = repository.savePerson(newPerson);
 
-        assertTrue(result);
+        assertEquals(result, newPerson);
     }
 
     @Test
@@ -58,7 +58,7 @@ class PersonRepositoryImplTest {
     void updatePersonTest_PersonNotFoundException() {
         Person updated = new Person("Not", "In the list");
 
-        assertThrows(PersonNotFoundException.class, () -> repository.updatePerson(updated));
+        assertThrows(NoSuchElementException.class, () -> repository.updatePerson(updated));
     }
 
     @Test

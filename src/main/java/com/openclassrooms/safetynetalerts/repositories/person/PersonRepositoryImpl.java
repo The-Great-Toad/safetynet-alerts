@@ -1,6 +1,5 @@
 package com.openclassrooms.safetynetalerts.repositories.person;
 
-import com.openclassrooms.safetynetalerts.configuration.exceptions.PersonNotFoundException;
 import com.openclassrooms.safetynetalerts.domain.Person;
 import com.openclassrooms.safetynetalerts.repositories.DataObjectRepository;
 import org.slf4j.Logger;
@@ -9,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 
 @Repository
@@ -27,17 +27,18 @@ public class PersonRepositoryImpl implements PersonRepository {
     }
 
     @Override
-    public boolean savePerson(Person p) {
+    public Person savePerson(Person p) {
         List<Person> people = getListPersons();
 
         String fullName = p.getFirstName() + " " + p.getLastName();
         if (people.contains(p)) {
-            final String error = String.format("%s - ERROR - %s already in the list - %s", loggingNameRef, fullName, p);
-            logger.error(error);
+            final String error = String.format("%s already in the list", fullName);
+            logger.error("{} - {} - {}", loggingNameRef, error, p);
             throw new IllegalArgumentException(error);
         }
         logger.debug("{} - Adding {} to the list - {}", loggingNameRef, fullName, p);
-        return people.add(p);
+        people.add(p);
+        return p;
     }
 
     @Override
@@ -53,9 +54,9 @@ public class PersonRepositoryImpl implements PersonRepository {
                 return people.get(index);
             }
         }
-        final String error = String.format("%s - ERROR - %s not found - %s", loggingNameRef, fullName, toUpdate);
-        logger.error(error);
-        throw new PersonNotFoundException(error);
+        final String error = String.format("%s not found", fullName);
+        logger.error("{} - {} - {}", loggingNameRef, error, toUpdate);
+        throw new NoSuchElementException(error);
     }
 
     @Override
@@ -71,9 +72,9 @@ public class PersonRepositoryImpl implements PersonRepository {
             }
             index++;
         }
-        final String error = String.format("%s - ERROR - %s not found - %s", loggingNameRef, fullName, toDelete);
-        logger.error(error);
-        throw new PersonNotFoundException(error);
+        final String error = String.format("%s not found", fullName);
+        logger.error("{} - {} - {}", loggingNameRef, error, toDelete);
+        throw new NoSuchElementException(error);
     }
 
     @Override
@@ -90,7 +91,9 @@ public class PersonRepositoryImpl implements PersonRepository {
                 .toList();
 
         if (result.isEmpty()) {
-            logger.debug("{} - No match found for lastname: {}", loggingNameRef, lastName);
+            final String error = String.format("No match found for lastname: %s", lastName);
+            logger.error("{} - {}", loggingNameRef, error);
+            throw new NoSuchElementException(error);
         }
         return result;
     }
@@ -109,7 +112,9 @@ public class PersonRepositoryImpl implements PersonRepository {
                 .toList();
 
         if (result.isEmpty()) {
-            logger.debug("{} - No match found for address: {}", loggingNameRef, address);
+            final String error = String.format("No match found for address: %s", address);
+            logger.error("{} - {}", loggingNameRef, error);
+            throw new NoSuchElementException(error);
         }
         return result;
     }

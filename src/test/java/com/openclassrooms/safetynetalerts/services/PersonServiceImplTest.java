@@ -17,7 +17,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.text.ParseException;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -55,11 +54,12 @@ class PersonServiceImplTest extends TestUtils {
 
     @Test
     void savePerson() {
-        when(personRepository.savePerson(person)).thenReturn(true);
+        Person newPerson = createPerson();
+        when(personRepository.savePerson(person)).thenReturn(newPerson);
 
-        boolean result = personService.savePerson(person);
+        Person result = personService.savePerson(person);
 
-        assertTrue(result);
+        assertEquals(result, newPerson);
         verify(personRepository, times(1)).savePerson(person);
     }
 
@@ -112,7 +112,7 @@ class PersonServiceImplTest extends TestUtils {
     }
 
     @Test
-    void getPersonInfoByFirstAndLastNameTest() throws JsonProcessingException, ParseException {
+    void getPersonInfoByFirstAndLastNameTest() throws JsonProcessingException {
         List<Person> listTest = List.of(person);
         Person personTest = listTest.get(0);
         String lastName = personTest.getLastName();
@@ -158,7 +158,7 @@ class PersonServiceImplTest extends TestUtils {
     }
 
     @Test
-    void getChildrenByAddressTest() throws ParseException {
+    void getChildrenByAddressTest() {
         String address = "test";
         when(personRepository.getPersonByAddress(anyString())).thenReturn(persons);
 

@@ -1,7 +1,11 @@
 package com.openclassrooms.safetynetalerts.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.openclassrooms.safetynetalerts.TestUtils;
 import com.openclassrooms.safetynetalerts.domain.Person;
+import com.openclassrooms.safetynetalerts.domain.dto.ChildDto;
+import com.openclassrooms.safetynetalerts.domain.dto.PersonInfoDto;
+import com.openclassrooms.safetynetalerts.services.person.PersonService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,24 +15,27 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 
+import java.util.List;
+
 import static org.hamcrest.CoreMatchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class PersonControllerTest {
+class PersonControllerTest extends TestUtils {
 
     @Autowired
     private MockMvc mockMvc;
     @Autowired
     private ObjectMapper mapper;
-    private static Person person;
+    @Autowired
+    private PersonService personService;
+    private Person person;
 
     @BeforeEach
     void setUp() {
-        person = new Person("Erick", "Pattisson");
-        person.setEmail("erick.patt@gmail.com");
+        person = createPerson();
     }
 
     /******************************************************************************************************************
@@ -49,8 +56,10 @@ class PersonControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(person)))
 //                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("true")));
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.firstName", is(person.getFirstName())))
+                .andExpect(jsonPath("$.lastName", is(person.getLastName())))
+                .andExpect(jsonPath("$.address", is(person.getAddress())));
     }
 
     @Test
@@ -68,50 +77,60 @@ class PersonControllerTest {
 
     @Test
     void updatePersonTest_success() throws Exception {
-        savePersonTest_success();
-        person.setEmail("erick.patt@outlook.com");
+        Person updateTest = createPerson();
+        updateTest.setFirstName("TEST");
+        updateTest.setLastName("UPDATE");
+        personService.savePerson(updateTest);
+        updateTest.setEmail("changed-my-email@email.com");
 
         mockMvc.perform(put("/person")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(person)))
+                        .content(mapper.writeValueAsString(updateTest)))
 //                .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.email", is("erick.patt@outlook.com")));
+                .andExpect(jsonPath("$.email", is(updateTest.getEmail())));
     }
 
     @Test
     void updatePersonTest_personNotFoundException() throws Exception {
-        person.setLastName("Smith");
+        person.setFirstName("NOT FOUND");
+        person.setLastName("TEST");
 
         mockMvc.perform(put("/person")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(person)))
 //                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Erick Smith not found")));
+                .andExpect(status().isNotFound())
+                .andExpect(content().string(containsString("NOT FOUND TEST not found")));
     }
 
     @Test
     void deletePersonTest_success() throws Exception {
+        Person deleteTest = createPerson();
+        deleteTest.setFirstName("TEST");
+        deleteTest.setLastName("DELETE");
+        personService.savePerson(deleteTest);
+
         mockMvc.perform(delete("/person")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(person)))
+                        .content(mapper.writeValueAsString(deleteTest)))
 //                .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.firstName", is("Erick")))
-                .andExpect(jsonPath("$.lastName", is("Pattisson")));
+                .andExpect(jsonPath("$.firstName", is(deleteTest.getFirstName())))
+                .andExpect(jsonPath("$.lastName", is(deleteTest.getLastName())));
     }
 
     @Test
     void deletePersonTest_personNotFoundException() throws Exception {
-        person.setLastName("Smith");
+        person.setFirstName("NOT FOUND");
+        person.setLastName("TEST");
 
         mockMvc.perform(delete("/person")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(person)))
-//                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Erick Smith not found")));
+//                .andDo(print()) // for debug
+                .andExpect(status().isNotFound())
+                .andExpect(content().string(containsString("NOT FOUND TEST not found")));
     }
 
     /******************************************************************************************************************
@@ -120,45 +139,61 @@ class PersonControllerTest {
 
     @Test
     void getChildrenByAddressTest() throws Exception {
+        String address = "1509 Culver St";
+        List<ChildDto> children = personService.getChildrenByAddress(address);
+
         mockMvc.perform(get("/childAlert")
-                        .param("address","1509 Culver St")
+                        .param("address",address)
                         .contentType(MediaType.APPLICATION_JSON))
+//                .andDo(print()) // for debug
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].firstName", is("Tenley")))
-                .andExpect(jsonPath("$[0].lastName", is("Boyd")))
-                .andExpect(jsonPath("$[0].age", is(10)));
+                .andExpect(jsonPath("$[0].firstName", is(children.get(0).getFirstName())))
+                .andExpect(jsonPath("$[0].lastName", is(children.get(0).getLastName())))
+                .andExpect(jsonPath("$[0].age", is(children.get(0).getAge())));
     }
 
     @Test
     void getPhonesByFireStationNumberTest() throws Exception {
+        int stationNumber = 3;
+        List<String> phones = personService.getPhonesByFireStationNumber(stationNumber);
+
         mockMvc.perform(get("/phoneAlert")
-                        .param("stationNumber","3")
+                        .param("firestation", Integer.toString(stationNumber))
                         .contentType(MediaType.APPLICATION_JSON))
+//                .andDo(print()) // for debug
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0]", is("841-874-6512")))
-                .andExpect(jsonPath("$[1]", is("841-874-6513")));
+                .andExpect(jsonPath("$[0]", is(phones.get(0))))
+                .andExpect(jsonPath("$[1]", is(phones.get(1))));
     }
 
     @Test
     void getPersonInfoByFirstAndLastNameTest() throws Exception {
+        String firstName = "John";
+        String lastName = "Boyd";
+        List<PersonInfoDto> results = personService.getPersonInfoByFirstAndLastName(firstName, lastName);
         mockMvc.perform(get("/personInfo")
-                        .param("firstName","John")
-                        .param("lastName","Boyd")
+                        .param("firstName",firstName)
+                        .param("lastName",lastName)
                         .contentType(MediaType.APPLICATION_JSON))
+//                .andDo(print()) // for debug
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].lastName", is("Boyd")))
-                .andExpect(jsonPath("$[0].address", is("1509 Culver St")))
-                .andExpect(jsonPath("$[0].age", is(39)))
-                .andExpect(jsonPath("$[0].email", is("jaboyd@email.com")));
+                .andExpect(jsonPath("$[0].lastName", is(results.get(0).getLastName())))
+                .andExpect(jsonPath("$[0].address", is(results.get(0).getAddress())))
+                .andExpect(jsonPath("$[0].age", is(results.get(0).getAge())))
+                .andExpect(jsonPath("$[0].email", is(results.get(0).getEmail())));
     }
 
     @Test
     void getResidentsEmailByCityTest() throws Exception {
+        String city = "Culver";
+        List<String> emails = personService.getResidentsEmailByCity(city);
+
         mockMvc.perform(get("/communityEmail")
-                        .param("city","Culver")
+                        .param("city",city)
                         .contentType(MediaType.APPLICATION_JSON))
+//                .andDo(print()) // for debug
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0]", is("jaboyd@email.com")))
-                .andExpect(jsonPath("$[1]", is("drk@email.com")));
+                .andExpect(jsonPath("$[0]", is(emails.get(0))))
+                .andExpect(jsonPath("$[1]", is(emails.get(1))));
     }
 }

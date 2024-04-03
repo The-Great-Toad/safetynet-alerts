@@ -50,7 +50,7 @@ public class DataObjectRepository {
 
     @PostConstruct
     private void initProjectData() {
-        mapper.setDateFormat(new SimpleDateFormat("dd/MM/yyyy"));
+        mapper.setDateFormat(new SimpleDateFormat("MM/dd/yyyy"));
         DataObject data;
         try {
             data = mapper.readValue(new File(filePath), new TypeReference<>() {});

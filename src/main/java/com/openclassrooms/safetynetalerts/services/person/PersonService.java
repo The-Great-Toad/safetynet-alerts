@@ -11,7 +11,7 @@ public interface PersonService {
 
     List<Person> getAllPerson();
 
-    boolean savePerson(Person p);
+    Person savePerson(Person p);
 
     Person updatePerson(Person p);
 

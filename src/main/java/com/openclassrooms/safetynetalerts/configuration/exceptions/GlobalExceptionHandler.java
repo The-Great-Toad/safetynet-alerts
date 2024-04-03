@@ -1,7 +1,6 @@
 package com.openclassrooms.safetynetalerts.configuration.exceptions;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -32,20 +31,27 @@ public class GlobalExceptionHandler {
         return errors;
     }
 
-    // TODO: 24/02/2024 handle all possible exceptions
+//    @ResponseStatus(HttpStatus.OK)
+//    @ExceptionHandler(PersonNotFoundException.class)
+//    public Map<String, String> handlePersonNotFoundException(PersonNotFoundException ex) {
+//        return getExceptionErrorMessageMap(ex);
+//    }
 
-    @ExceptionHandler(PersonNotFoundException.class)
-    public ResponseEntity handlePersonNotFoundException(PersonNotFoundException ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.OK);
-    }
-
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity handleIllegalArgumentException(IllegalArgumentException ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    public Map<String, String> handleIllegalArgumentException(IllegalArgumentException ex) {
+        return getExceptionErrorMessageMap(ex);
     }
 
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(NoSuchElementException.class)
-    public ResponseEntity handleNoSuchElementException(NoSuchElementException ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    public Map<String, String> handleNoSuchElementException(NoSuchElementException ex) {
+        return getExceptionErrorMessageMap(ex);
+    }
+
+    private Map<String, String> getExceptionErrorMessageMap(Exception ex) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("error", ex.getMessage());
+        return errors;
     }
 }

@@ -9,17 +9,22 @@ import com.openclassrooms.safetynetalerts.domain.dto.PersonInfoDto;
 import com.openclassrooms.safetynetalerts.repositories.person.PersonRepository;
 import com.openclassrooms.safetynetalerts.services.firestation.FirestationService;
 import com.openclassrooms.safetynetalerts.services.medicalrecord.MedicalRecordService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.Period;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class PersonServiceImpl implements PersonService {
+
+    private static final Logger logger = LoggerFactory.getLogger(PersonServiceImpl.class);
+    private final String LOG_ID = "[PersonServiceImpl]";
 
     @Autowired
     private PersonRepository personRepository;
@@ -34,7 +39,7 @@ public class PersonServiceImpl implements PersonService {
         return personRepository.getListPersons();
     }
 
-    public boolean savePerson(Person p){
+    public Person savePerson(Person p){
         return personRepository.savePerson(p);
     }
 
@@ -79,10 +84,16 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public List<String> getResidentsEmailByCity(String city) {
-        return getAllPerson().stream()
+        List<String> emails = getAllPerson().stream()
                 .filter(person -> person.getCity().equalsIgnoreCase(city))
                 .map(Person::getEmail)
                 .toList();
+        if (emails.isEmpty()) {
+            final String error = String.format("No match found for city: %s", city);
+            logger.error("{} - {}", LOG_ID, error);
+            throw new NoSuchElementException(error);
+        }
+        return emails;
     }
 
     @Override
@@ -125,7 +136,7 @@ public class PersonServiceImpl implements PersonService {
     }
 
     public Integer calculateAge(MedicalRecord md) {
-        LocalDate birthDate = md.getBirthdate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        return Period.between(birthDate, LocalDate.now()).getYears();
+//        LocalDate birthDate = md.getBirthdate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        return Period.between(md.getBirthdate(), LocalDate.now()).getYears();
     }
 }
